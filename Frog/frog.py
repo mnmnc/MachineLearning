@@ -97,6 +97,9 @@ def main():
 
 	set_environment()
 
+	times_eaten = 0
+	times_run = 0
+
 	for i in range(round(environment_size/probe_size)):
 		p = probe_environment(probe_size);
 		#print(p)
@@ -105,11 +108,16 @@ def main():
 		print("\t",stork, fly, end="\t")
 		if stork == 1:
 			print("FROG JUMPING AWAY", end="")
+			times_run = times_run + 1
 		else:
 			if fly == 1:
 				print("FROG'S DINNER IS SERVED.", end="")
+				times_eaten = times_eaten +1
 			else:
 				print("-", end="")
+
+	print(" ")
+	print("\nSTATS:\n", "\tTIMES EATEN: ", times_eaten, "\n\tTIMES RUN: ", times_run )
 
 if __name__ == "__main__":
     main();
