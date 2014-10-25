@@ -34,30 +34,39 @@ def check_if_stork(probe):
 	current_index = 0
 	for i in range(0, len(probe)-len(stork_bits)):
 		view = probe[current_index:current_index+len(stork_bits)]
-		print("VIEW:", view)
-		print("STORK:", stork_bits)
+		#print("VIEW:", view)
+		#print("STORK:", stork_bits)
 		match = 0
 		for i in range(len(stork_bits)):
 			if stork_bits[i] == view[i]:
 				match = match + 1
-		print("MATCHING IN:", match)
-		print(" ")
+		#print("MATCHING IN:", match)
+		#print(" ")
 		if match == len(stork_bits):
 			return 1
 		else:
 			current_index = current_index + 1
 	return 0
 
+def check_if_fly(probe):
+	global fly_bits
+	current_index = 0
+	for i in range(0, len(probe)-len(fly_bits)):
+		view = probe[current_index:current_index+len(fly_bits)]
+		#print("VIEW:", view)
+		#print("FLY:", fly_bits)
+		match = 0
+		for i in range(len(fly_bits)):
+			if fly_bits[i] == view[i]:
+				match = match + 1
+		#print("MATCHING IN:", match)
+		#print(" ")
+		if match == len(fly_bits):
+			return 1
+		else:
+			current_index = current_index + 1
+	return 0
 
-
-def asses_object( probe ):
-	stork = check_if_stork( probe )
-	fly = check_if_fly( probe )
-
-	if ( fly == 1 ):
-		eat()
-	if ( stork == 1):
-		run()
 
 def probe_environment(n):
 	print(" ")
@@ -80,13 +89,28 @@ def make_decision():
 
 
 def main():
-	generate_bits(1000)
-	display_bits()
+	environment_size = 10000
+	probe_size = 50
+	generate_bits(environment_size)
+	#display_bits()
 	print(" ");
+
 	set_environment()
-	p = probe_environment(50);
-	print("\n");
-	print(check_if_stork(p))
+
+	for i in range(round(environment_size/probe_size)):
+		p = probe_environment(probe_size);
+		#print(p)
+		stork = (check_if_stork(p))
+		fly = (check_if_fly(p))
+		print("\t",stork, fly, end="\t")
+		if stork == 1:
+			print("FROG JUMPING AWAY", end="")
+		else:
+			if fly == 1:
+				print("FROG'S DINNER IS SERVED.", end="")
+			else:
+				print("-", end="")
 
 if __name__ == "__main__":
     main();
+
