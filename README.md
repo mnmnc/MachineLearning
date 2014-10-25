@@ -1,4 +1,4 @@
 MachineLearning
 ===============
 
-Machine learning school projects
+FindS - find square that will contain all positive values.
