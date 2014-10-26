@@ -1,67 +1,56 @@
 import random
 
+environment = []
+stork_genom = []
+fly_genom 	= []
+environment_state = 0
 
-actions = [];
-bits_array = []
-stork_bits = []
-fly_bits = []
-environment_index = 0;
+def initiate_environment():
+	global stork_genom, fly_genom
+	stork_genom = [1,0,0,1,0,1]
+	fly_genom 	= [1,1,1,1,0,0]
 
-def set_environment():
-	global stork_bits, fly_bits
-	stork_bits = [1,0,0,1,0,1]
-	fly_bits = [1,1,1,1,0,0]
-
-
-def generate_bits(n):
-	global bits_array
+def generate_environment(n):
+	global environment
 	for i in range(n):
 		r = random.randint(0,1)
-		bits_array.append(r)
+		environment.append(r)
 
-def display_bits():
-	global bits_array
+def display_environment():
+	global environment
 	index = 0
-	for i in bits_array:
-		if (index % 50) == 0:
+	for i in environment:
+		if (index%50) == 0:
 			print(" ")
 		print(i, end="")
 		index = index + 1
 
 
 def check_if_stork(probe):
-	global stork_bits
+	global stork_genom
 	current_index = 0
-	for i in range(0, len(probe)-len(stork_bits)):
-		view = probe[current_index:current_index+len(stork_bits)]
-		#print("VIEW:", view)
-		#print("STORK:", stork_bits)
+	for i in range(0, len(probe)-len(stork_genom)):
+		view = probe[current_index:current_index+len(stork_genom)]
 		match = 0
-		for i in range(len(stork_bits)):
-			if stork_bits[i] == view[i]:
+		for i in range(len(stork_genom)):
+			if stork_genom[i] == view[i]:
 				match = match + 1
-		#print("MATCHING IN:", match)
-		#print(" ")
-		if match == len(stork_bits):
+		if match == len(stork_genom):
 			return 1
 		else:
 			current_index = current_index + 1
 	return 0
 
 def check_if_fly(probe):
-	global fly_bits
+	global fly_genom
 	current_index = 0
-	for i in range(0, len(probe)-len(fly_bits)):
-		view = probe[current_index:current_index+len(fly_bits)]
-		#print("VIEW:", view)
-		#print("FLY:", fly_bits)
+	for i in range(0, len(probe)-len(fly_genom)):
+		view = probe[current_index:current_index+len(fly_genom)]
 		match = 0
-		for i in range(len(fly_bits)):
-			if fly_bits[i] == view[i]:
+		for i in range(len(fly_genom)):
+			if fly_genom[i] == view[i]:
 				match = match + 1
-		#print("MATCHING IN:", match)
-		#print(" ")
-		if match == len(fly_bits):
+		if match == len(fly_genom):
 			return 1
 		else:
 			current_index = current_index + 1
@@ -70,39 +59,26 @@ def check_if_fly(probe):
 
 def probe_environment(n):
 	print(" ")
-	global environment_index
-	probe = bits_array[environment_index:environment_index+n]
+	global environment_state
+	probe = environment[environment_state:environment_state+n]
 	for i in probe:
 		print(i, end="")
-	environment_index = environment_index + n;
+	environment_state = environment_state + n;
 	return probe
-
-def make_decision():
-	run = 0;
-	eat = 0;
-	for action in actions:
-		if action == "RUN":
-			act("RUN");
-		else:
-			if action == "EAT":
-				act("EAT")
-
 
 def main():
 	environment_size = 10000
 	probe_size = 50
-	generate_bits(environment_size)
-	#display_bits()
+	generate_environment(environment_size)
+
 	print(" ");
 
-	set_environment()
-
+	initiate_environment()
 	times_eaten = 0
 	times_run = 0
 
 	for i in range(round(environment_size/probe_size)):
 		p = probe_environment(probe_size);
-		#print(p)
 		stork = (check_if_stork(p))
 		fly = (check_if_fly(p))
 		print("\t",stork, fly, end="\t")
