@@ -20,6 +20,8 @@
 # A-4-C-1-F-2-J-3-O
 
 import pprint
+from colorama import init, Fore, Back, Style
+
 
 graph = {
 	'A' : [ {'B':6},	{'C':4} ],
@@ -59,11 +61,86 @@ def set_destination_node(node):
 	destination_node = node
 
 
+def show_graph():
+	global distance_matrix
+	_A = "A"
+	_B = "B"
+	_C = "C"
+	_D = "D"
+	_E = "E"
+	_F = "F"
+	_G = "G"
+	_H = "H"
+	_I = "I"
+	_J = "J"
+	_K = "K"
+	_L = "L"
+	_M = "M"
+	_N = "N"
+	_O = "O"
+	_P = "P"
+	_Q = "Q"
+	_R = "R"
+	_S = "S"
+	_T = "T"
+	_U = "U"
+	_W = "W"
+	_X = "X"
+	_Y = "Y"
+	_Z = "Z"
+	if distance_matrix["A"] < 99999: _A = Fore.RED + str(distance_matrix["A"]) + Fore.RESET
+	if distance_matrix["B"] < 99999: _B = Fore.RED + str(distance_matrix["B"]) + Fore.RESET
+	if distance_matrix["C"] < 99999: _C = Fore.RED + str(distance_matrix["C"]) + Fore.RESET
+	if distance_matrix["D"] < 99999: _D = Fore.RED + str(distance_matrix["D"]) + Fore.RESET
+	if distance_matrix["E"] < 99999: _E = Fore.RED + str(distance_matrix["E"]) + Fore.RESET
+	if distance_matrix["F"] < 99999: _F = Fore.RED + str(distance_matrix["F"]) + Fore.RESET
+	if distance_matrix["G"] < 99999: _G = Fore.RED + str(distance_matrix["G"]) + Fore.RESET
+	if distance_matrix["H"] < 99999: _H = Fore.RED + str(distance_matrix["H"]) + Fore.RESET
+	if distance_matrix["I"] < 99999: _I = Fore.RED + str(distance_matrix["I"]) + Fore.RESET
+	if distance_matrix["J"] < 99999: _J = Fore.RED + str(distance_matrix["J"]) + Fore.RESET
+	if distance_matrix["K"] < 99999: _K = Fore.RED + str(distance_matrix["K"]) + Fore.RESET
+	if distance_matrix["L"] < 99999: _L = Fore.RED + str(distance_matrix["L"]) + Fore.RESET
+	if distance_matrix["M"] < 99999: _M = Fore.RED + str(distance_matrix["M"]) + Fore.RESET
+	if distance_matrix["N"] < 99999: _N = Fore.RED + str(distance_matrix["N"]) + Fore.RESET
+	if distance_matrix["O"] < 99999: _O = Fore.RED + str(distance_matrix["O"]) + Fore.RESET
+	if distance_matrix["P"] < 99999: _P = Fore.RED + str(distance_matrix["P"]) + Fore.RESET
+	if distance_matrix["Q"] < 99999: _Q = Fore.RED + str(distance_matrix["Q"]) + Fore.RESET
+	if distance_matrix["R"] < 99999: _R = Fore.RED + str(distance_matrix["R"]) + Fore.RESET
+	if distance_matrix["S"] < 99999: _S = Fore.RED + str(distance_matrix["S"]) + Fore.RESET
+	if distance_matrix["T"] < 99999: _T = Fore.RED + str(distance_matrix["T"]) + Fore.RESET
+	if distance_matrix["U"] < 99999: _U = Fore.RED + str(distance_matrix["U"]) + Fore.RESET
+	if distance_matrix["W"] < 99999: _W = Fore.RED + str(distance_matrix["W"]) + Fore.RESET
+	if distance_matrix["X"] < 99999: _X = Fore.RED + str(distance_matrix["X"]) + Fore.RESET
+	if distance_matrix["Y"] < 99999: _Y = Fore.RED + str(distance_matrix["Y"]) + Fore.RESET
+	if distance_matrix["Z"] < 99999: _Z = Fore.RED + str(distance_matrix["Z"]) + Fore.RESET
+
+	# print("K---P---T---X---Z")
+	# print("|   |   |   |   |")
+	# print("G---L---Q---U---Y")
+	# print("|   |   |   |   |")
+	# print("D---H---M---R---W")
+	# print("|   |   |   |   |")
+	# print("B---E---I---N---S")
+	# print("|   |   |   |   |")
+	# print("A---C---F---J---O")
+
+	print( str(_K) + "\t" + str(_P) + "\t" + str(_T) + "\t" + str(_X) + "\t" + str(_Z))
+	print("|\t|\t|\t|\t|")
+	print( str(_G) + "\t" + str(_L) + "\t" + str(_Q) + "\t" + str(_U) + "\t" + str(_Y))
+	print("|\t|\t|\t|\t|")
+	print( str(_D) + "\t" + str(_H) + "\t" + str(_M) + "\t" + str(_R) + "\t" + str(_W))
+	print("|\t|\t|\t|\t|")
+	print( str(_B) + "\t" + str(_E) + "\t" + str(_I) + "\t" + str(_N) + "\t" + str(_S))
+	print("|\t|\t|\t|\t|")
+	print( str(_A) + "\t" + str(_C) + "\t" + str(_F) + "\t" + str(_J) + "\t" + str(_O))
+
+
+
+
 def fill_unvisited_vertices():
 	global unvisited
 	unvisited = []
 	for key in graph:
-		print("Adding", key, "to unvisited")
 		unvisited.append(key)
 
 
@@ -72,26 +149,18 @@ def fill_distance_matrix():
 	distance_matrix = {}
 	for key in graph:
 		if key == "A":
-			print("Adding initial distance 99999 for", key)
 			distance_matrix.update({key:0})
 		else:
-			print("Adding initial distance 99999 for", key)
 			distance_matrix.update({key:99999})
 
 
 def calculate_distance_to_neighbours():
 	global initial_node, distance_matrix
 	neighbours = graph[initial_node]
-	print("Iterating over neighbours")
 	for neighbour in neighbours:
-		print("\tProcessing neighbour:", neighbour)
 		for neighbour_name in neighbour:
-			print("\t\tneighbour name:", neighbour_name)
 			weight = neighbour[neighbour_name]
-			print("\t\tneighbour weight:", weight)
-			print("\t\t\tComparing:", str(distance_matrix[initial_node] + weight), "and", str(distance_matrix[neighbour_name])  )
 			if distance_matrix[initial_node] + weight < distance_matrix[neighbour_name]:
-				print("\t\t\tSMALLER!")
 				distance_matrix[neighbour_name] = distance_matrix[initial_node] + weight
 
 
@@ -109,15 +178,11 @@ def get_node_with_smallest_distance():
 		return smallest_distance_node
 
 def get_closer_neighbour(node):
-	print("Searching for closest neighbour of :", node)
 	smallest_value = 99999
 	closest_neighbour = None
 	for neighbours in graph[node]:
-		print("\tNeighbours:", neighbours)
 		for neighbour_name in neighbours:
-			print("\t\tNeighbour:", neighbour_name, " Nvalue:", distance_matrix[neighbour_name], " smallest", smallest_value  )
 			if distance_matrix[neighbour_name] < smallest_value:
-				print("\t\t\tnew smallest value", distance_matrix[neighbour_name], " node", neighbour_name )
 				smallest_value = distance_matrix[neighbour_name]
 				closest_neighbour = neighbour_name
 	return closest_neighbour
@@ -139,7 +204,7 @@ def process_nodes():
 	pass
 
 def main():
-
+	init()
 	printer = pprint.PrettyPrinter(width=50)
 	global initial_node, distance_matrix, unvisited, destination_node
 	fill_unvisited_vertices()
@@ -148,11 +213,12 @@ def main():
 
 	for i in range(len(graph)):
 		set_initial_node(get_node_with_smallest_distance())
-		print(initial_node)
+		print("\nCalculating from: ",initial_node)
 		calculate_distance_to_neighbours()
-		printer.pprint(distance_matrix)
+		#printer.pprint(distance_matrix)
+		show_graph()
 		unvisited.remove(initial_node)
-		printer.pprint(unvisited)
+		#printer.pprint(unvisited)
 
 	find_reverse_path()
 
