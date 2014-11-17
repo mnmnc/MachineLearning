@@ -102,10 +102,10 @@ def get_number_of_value_occurance(local_data, attr, attr_value):
 
 def get_attribute_gain(local_data, decision_attr, attr, decision_positive_value, decision_negative_value):
 	attribute_gain = get_data_entropy(local_data, decision_attr)
-	#print("Full data entropy:", attribute_entropy)
+	print("Full data entropy:", attribute_gain)
 	attribute_values = get_unique_values(local_data, attr)
 	for value in attribute_values:
-		#print("Calculating for", attr, " for value", value)
+		print("Calculating for", attr, " for value", value)
 		value_entropy = get_attribute_value_entropy(local_data, decision_attr, attr, value, decision_positive_value, decision_negative_value)
 		attribute_gain  -= (get_number_of_value_occurance(local_data,attr,value) / len(local_data) * value_entropy)
 	print("Gain for attribute", attr, "is", attribute_gain)
@@ -132,8 +132,8 @@ def build_new_data_set(local_data, root_attribute, root_attribute_value):
 			data_set.append(copy.deepcopy(element))
 	for element in data_set:
 		del(element[root_attribute])
-	print("Data set for attribute", root_attribute, "and value", root_attribute_value)
 	(pprint.PrettyPrinter()).pprint(data_set)
+	return data_set
 
 def main():
 	global nodes_processed
@@ -152,9 +152,11 @@ def main():
 	nodes_processed.append(node_attribute)
 
 	node_attribute_values = get_unique_values(data,node_attribute)
+	print("\nprocessing values")
 	for value in node_attribute_values:
-		build_new_data_set(data, node_attribute, value)
-
+		local_data_set = build_new_data_set(data, node_attribute, value)
+		next_node_attribute = get_best_node(local_data_set, "PLAY",1,0)
+		print("Best next node for", node_attribute, "and value", value, "is", next_node_attribute)
 
 
 	# Build tree
