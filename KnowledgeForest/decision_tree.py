@@ -1,12 +1,12 @@
 import pprint
 import math
+import copy
 
 # AURA	0 Sunny | 1 Cloud | 2 Rain
 # TEMP	0 High  | 1 Medium | 2 Low
 # WILG  0 High  | 1 Normal
 # WIND  0 High  | 1 Low
 # PLAY  0 No	| 1 Yes
-
 
 data = [
 	{"AURA": 0, "TEMP": 0, "WILG": 0, "WIND": 1, "PLAY": 0},  # 1
@@ -22,7 +22,7 @@ data = [
 	{"AURA": 0, "TEMP": 1, "WILG": 1, "WIND": 0, "PLAY": 1},  # 11
 	{"AURA": 1, "TEMP": 1, "WILG": 0, "WIND": 0, "PLAY": 1},  # 12
 	{"AURA": 1, "TEMP": 0, "WILG": 1, "WIND": 1, "PLAY": 1},  # 13
-	{"AURA": 2, "TEMP": 1, "WILG": 0, "WIND": 0, "PLAY": 0}  # 14
+	{"AURA": 2, "TEMP": 1, "WILG": 0, "WIND": 0, "PLAY": 0}   # 14
 ]
 
 
@@ -125,7 +125,15 @@ def get_best_node(local_data, decision_attr, decision_positive_value, decision_n
 	print("Highest gain given by attribute:", best_attribute)
 	return best_attribute
 
-
+def build_new_data_set(local_data, root_attribute, root_attribute_value):
+	data_set = []
+	for element in local_data:
+		if element[root_attribute] == root_attribute_value:
+			data_set.append(copy.deepcopy(element))
+	for element in data_set:
+		del(element[root_attribute])
+	print("Data set for attribute", root_attribute, "and value", root_attribute_value)
+	(pprint.PrettyPrinter()).pprint(data_set)
 
 def main():
 	global nodes_processed
@@ -140,10 +148,21 @@ def main():
 	#get_attribute_gain(data,"PLAY","WILG",1,0)
 	#get_attribute_gain(data,"PLAY","WIND",1,0)
 
-	node = get_best_node(data, "PLAY",1,0)
-	nodes_processed.append(node)
-	node = get_best_node(data, "PLAY",1,0)
-	nodes_processed.append(node)
+	node_attribute = get_best_node(data, "PLAY",1,0)
+	nodes_processed.append(node_attribute)
+
+	node_attribute_values = get_unique_values(data,node_attribute)
+	for value in node_attribute_values:
+		build_new_data_set(data, node_attribute, value)
+
+
+
+	# Build tree
+		# get root
+		# for each values of root
+			# create new data table limited to particular value
+			# get attribute with highest gain and set as sub root
+
 
 if __name__ == "__main__":
 	main()
