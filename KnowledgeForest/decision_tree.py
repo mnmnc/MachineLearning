@@ -101,11 +101,17 @@ def get_number_of_value_occurance(local_data, attr, attr_value):
 	return counter
 
 def get_attribute_gain(local_data, decision_attr, attr, decision_positive_value, decision_negative_value):
+	# Attribute gain initialized with entropy level of all data.
+	# Gain(S, Attribute) =
+	# 	Entropy(S) -
+	# 		(Attr_pos/(Attr_pos+Attr_neg))log2(Attr_pos/(Attr_pos+Attr_neg)) -
+	#		(Attr_neg/(Attr_pos+Attr_neg))log2(Attr_neg/(Attr_pos+Attr_neg))
+
 	attribute_gain = get_data_entropy(local_data, decision_attr)
-	print("Full data entropy:", attribute_gain)
+	#print("Full data entropy:", attribute_gain)
 	attribute_values = get_unique_values(local_data, attr)
 	for value in attribute_values:
-		print("Calculating for", attr, " for value", value)
+		#print("Calculating for", attr, " for value", value)
 		value_entropy = get_attribute_value_entropy(local_data, decision_attr, attr, value, decision_positive_value, decision_negative_value)
 		attribute_gain  -= (get_number_of_value_occurance(local_data,attr,value) / len(local_data) * value_entropy)
 	print("Gain for attribute", attr, "is", attribute_gain)
@@ -132,12 +138,42 @@ def build_new_data_set(local_data, root_attribute, root_attribute_value):
 			data_set.append(copy.deepcopy(element))
 	for element in data_set:
 		del(element[root_attribute])
+	print(" ")
 	(pprint.PrettyPrinter()).pprint(data_set)
 	return data_set
 
-def main():
+def check_for_uniform_decision(local_data, decision_attribute, root_attribute, root_attribute_value):
+	check = 0
+	value = None
+	for element in local_data:
+		if value == None:
+			value = element[decision_attribute]
+		else:
+			if value != element[decision_attribute]:
+				check += 1
+	if check == 0:
+		print("\nUniform value available for ", root_attribute, "=", root_attribute_value, " -> ", local_data[0][decision_attribute] )
+		return 0
+	else:
+		return 1
+
+def build_tree(local_data, decision_attribute, decision_positive_value, decision_negative_value):
 	global nodes_processed
+	root = None
+	if len(nodes_processed) < 1:
+		root = get_main_root(local_data, decision_attribute,decision_positive_value,decision_negative_value)
+		nodes_processed.append(root)
+	else:
+		root_attribute_values = get_unique_values(data,root)
+
+def get_main_root(local_data, decision_attribute, decision_positive_value, decision_negative_value):
+	node_attribute = get_best_node(local_data, decision_attribute,decision_positive_value,decision_negative_value)
+	pass
+
+def main():
+	global nodes_processed, result
 	nodes_processed = []
+	result = []
 
 	print("Number of elements in data array: ", len(data))
 
@@ -149,14 +185,17 @@ def main():
 	#get_attribute_gain(data,"PLAY","WIND",1,0)
 
 	node_attribute = get_best_node(data, "PLAY",1,0)
+
 	nodes_processed.append(node_attribute)
 
 	node_attribute_values = get_unique_values(data,node_attribute)
 	print("\nprocessing values")
 	for value in node_attribute_values:
 		local_data_set = build_new_data_set(data, node_attribute, value)
-		next_node_attribute = get_best_node(local_data_set, "PLAY",1,0)
-		print("Best next node for", node_attribute, "and value", value, "is", next_node_attribute)
+		uniform = check_for_uniform_decision(local_data_set,"PLAY", node_attribute, value)
+		if uniform != 0:
+			next_node_attribute = get_best_node(local_data_set, "PLAY",1,0)
+			print("Best next node for", node_attribute, "and value", value, "is", next_node_attribute)
 
 
 	# Build tree
