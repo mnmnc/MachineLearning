@@ -152,23 +152,31 @@ def check_for_uniform_decision(local_data, decision_attribute, root_attribute, r
 			if value != element[decision_attribute]:
 				check += 1
 	if check == 0:
-		print("\nUniform value available for ", root_attribute, "=", root_attribute_value, " -> ", local_data[0][decision_attribute] )
+		#print("\nUniform value available for ", root_attribute, "=", root_attribute_value, " -> ", local_data[0][decision_attribute] )
 		return 0
 	else:
 		return 1
 
-def build_tree(local_data, decision_attribute, decision_positive_value, decision_negative_value):
-	global nodes_processed
-	root = None
-	if len(nodes_processed) < 1:
-		root = get_main_root(local_data, decision_attribute,decision_positive_value,decision_negative_value)
-		nodes_processed.append(root)
-	else:
-		root_attribute_values = get_unique_values(data,root)
 
-def get_main_root(local_data, decision_attribute, decision_positive_value, decision_negative_value):
-	node_attribute = get_best_node(local_data, decision_attribute,decision_positive_value,decision_negative_value)
-	pass
+def build_tree(local_data, current_root, decision_attribute, decision_positive_value, decision_negative_value):
+	if current_root == None:
+		print("No root dected. Searching for first one.")
+		new_root = get_best_node(local_data, decision_attribute, decision_positive_value, decision_negative_value)
+		print("New root found:", new_root)
+		build_tree(local_data, new_root, decision_attribute, decision_positive_value, decision_negative_value)
+	else:
+		print("Getting unique values for ", current_root)
+		new_root_values = get_unique_values(local_data, current_root)
+		for value in new_root_values:
+			print("\n\tCalculation for value:", value, "of ", current_root)
+			new_data_set = build_new_data_set(local_data, current_root, value)
+			uniform_decision = check_for_uniform_decision(new_data_set, decision_attribute, current_root, value)
+			if uniform_decision == 0:
+				print("\nUniform value available for ", current_root, "=", value, " -> ", new_data_set[0][decision_attribute] )
+			else:
+				next_root = get_best_node(new_data_set, decision_attribute, decision_positive_value, decision_negative_value)
+				print("\tFound new root:", next_root)
+				build_tree(new_data_set, next_root, decision_attribute, decision_positive_value, decision_negative_value)
 
 def main():
 	global nodes_processed, result
@@ -184,19 +192,20 @@ def main():
 	#get_attribute_gain(data,"PLAY","WILG",1,0)
 	#get_attribute_gain(data,"PLAY","WIND",1,0)
 
-	node_attribute = get_best_node(data, "PLAY",1,0)
+	# node_attribute = get_best_node(data, "PLAY",1,0)
+	#
+	# nodes_processed.append(node_attribute)
+	#
+	# node_attribute_values = get_unique_values(data,node_attribute)
+	# print("\nprocessing values")
+	# for value in node_attribute_values:
+	# 	local_data_set = build_new_data_set(data, node_attribute, value)
+	# 	uniform = check_for_uniform_decision(local_data_set,"PLAY", node_attribute, value)
+	# 	if uniform != 0:
+	# 		next_node_attribute = get_best_node(local_data_set, "PLAY",1,0)
+	# 		print("Best next node for", node_attribute, "and value", value, "is", next_node_attribute)
 
-	nodes_processed.append(node_attribute)
-
-	node_attribute_values = get_unique_values(data,node_attribute)
-	print("\nprocessing values")
-	for value in node_attribute_values:
-		local_data_set = build_new_data_set(data, node_attribute, value)
-		uniform = check_for_uniform_decision(local_data_set,"PLAY", node_attribute, value)
-		if uniform != 0:
-			next_node_attribute = get_best_node(local_data_set, "PLAY",1,0)
-			print("Best next node for", node_attribute, "and value", value, "is", next_node_attribute)
-
+	build_tree(data, None, "PLAY", 1, 0)
 
 	# Build tree
 		# get root
