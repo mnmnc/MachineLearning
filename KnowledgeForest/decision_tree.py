@@ -179,7 +179,7 @@ def check_for_uniform_decision(local_data, decision_attribute):
 
 def build_tree(local_data, current_root, decision_attribute, decision_positive_value, decision_negative_value, indent):
 	if current_root is None:
-		print(debug_prefix + "No root dected. Searching for first one." + debug_postfix)
+		print(debug_prefix + "No root detected. Searching for first one." + debug_postfix)
 		new_root = get_best_node(local_data, decision_attribute, decision_positive_value, decision_negative_value)
 		print(debug_prefix + "New root found:", new_root + debug_postfix)
 		indent = "\t"
