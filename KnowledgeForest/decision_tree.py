@@ -9,6 +9,15 @@ from colorama import Fore
 # WIND  0 High  | 1 Low
 # PLAY  0 No	| 1 Yes
 
+mapping = {
+	"AURA": ["Sunny", "Cloudy", "Raining"],
+	"TEMP": ["High", "Medium", "Low"],
+	"WILG": ["High", "Normal"],
+	"WIND": ["High", "Low"],
+	"PLAY": ["No", "Yes"]
+}
+
+
 data = [
 	{"AURA": 0, "TEMP": 0, "WILG": 0, "WIND": 1, "PLAY": 0},  # 1
 	{"AURA": 0, "TEMP": 0, "WILG": 0, "WIND": 0, "PLAY": 0},  # 2
@@ -170,11 +179,12 @@ def build_tree(local_data, current_root, decision_attribute, decision_positive_v
 		new_root_values = get_unique_values(local_data, current_root)
 		indent += "\t"
 		for value in new_root_values:
-			print(indent + "Calculation for value:", value, "of ", current_root)
+			print(indent + "Calculation for:", Fore.GREEN + current_root, "=", mapping[current_root][value] + Fore.RESET)
+
 			new_data_set = build_new_data_set(local_data, current_root, value)
 			uniform_decision = check_for_uniform_decision(new_data_set, decision_attribute, current_root, value)
 			if uniform_decision == 0:
-				print(indent +"\tUniform value available for ", current_root, "=", value, " -> ", new_data_set[0][decision_attribute] )
+				print(indent +"\t\tDecision: ", Fore.YELLOW ,decision_attribute, "=", new_data_set[0][decision_attribute], Fore.RESET )
 			else:
 				next_root = get_best_node(new_data_set, decision_attribute, decision_positive_value, decision_negative_value)
 				if debug == 1: print("\tFound new root:", next_root)
@@ -185,7 +195,7 @@ def main():
 	global nodes_processed, result , debug, debug_prefix, debug_postfix
 	nodes_processed = []
 	result = {}
-	debug = 1
+	debug = 0
 	debug_prefix = "\t\t[DBG] " + Fore.BLUE
 	debug_postfix = Fore.RESET
 
