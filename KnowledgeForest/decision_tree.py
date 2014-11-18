@@ -2,11 +2,6 @@ import pprint
 import math
 import copy
 
-# AURA	0 Sunny | 1 Cloud | 2 Rain
-# TEMP	0 High  | 1 Medium | 2 Low
-# WILG  0 High  | 1 Normal
-# WIND  0 High  | 1 Low
-# PLAY  0 No	| 1 Yes
 
 data = [
 	{"AURA": 0, "TEMP": 0, "WILG": 0, "WIND": 1, "PLAY": 0},  # 1
@@ -27,8 +22,6 @@ data = [
 
 
 def count_values_for_attribute(local_data, attr, attr_value):
-	"""	Given data set, attribute and attribute value checks
-		for number of value occurances for given attribute """
 	counter = 0
 	for element in local_data:
 		if element[attr] == attr_value:
@@ -38,8 +31,6 @@ def count_values_for_attribute(local_data, attr, attr_value):
 
 
 def get_number_of_unique_values(local_data, attr):
-	"""	Given data set and attribute, checks
-		for number of values that the attribute can take """
 	values = []
 	for element in local_data:
 		if element[attr] not in values:
@@ -47,8 +38,6 @@ def get_number_of_unique_values(local_data, attr):
 	return len(values)
 
 def get_unique_values(local_data, attr):
-	"""	Given data set and attribute, returns
-		unique values that the attribute takes """
 	values = []
 	for element in local_data:
 		if element[attr] not in values:
@@ -57,7 +46,6 @@ def get_unique_values(local_data, attr):
 
 
 def get_data_entropy(local_data, decision_attribute):
-	""" Calculates entropy for given attribute and data set. """
 	values_array = []
 	result = 0
 	data_set_size = len(local_data)
@@ -76,7 +64,6 @@ def get_data_entropy(local_data, decision_attribute):
 
 
 def get_attribute_value_entropy(local_data, decision_attr, attr, attr_value, decision_positive_value, decision_negative_value):
-	""" Calculates entropy for particular value of given attribute. """
 	positive_values = 0
 	negative_values = 0
 	for element in local_data:
@@ -84,7 +71,6 @@ def get_attribute_value_entropy(local_data, decision_attr, attr, attr_value, dec
 			positive_values += 1
 		if element[attr] == attr_value and element[decision_attr] == decision_negative_value:
 			negative_values += 1
-
 	if negative_values == 0 or positive_values == 0:
 		return 0
 	else:
@@ -101,20 +87,11 @@ def get_number_of_value_occurance(local_data, attr, attr_value):
 	return counter
 
 def get_attribute_gain(local_data, decision_attr, attr, decision_positive_value, decision_negative_value):
-	# Attribute gain initialized with entropy level of all data.
-	# Gain(S, Attribute) =
-	# 	Entropy(S) -
-	# 		(Attr_pos/(Attr_pos+Attr_neg))log2(Attr_pos/(Attr_pos+Attr_neg)) -
-	#		(Attr_neg/(Attr_pos+Attr_neg))log2(Attr_neg/(Attr_pos+Attr_neg))
-
 	attribute_gain = get_data_entropy(local_data, decision_attr)
-	#print("Full data entropy:", attribute_gain)
 	attribute_values = get_unique_values(local_data, attr)
 	for value in attribute_values:
-		#print("Calculating for", attr, " for value", value)
 		value_entropy = get_attribute_value_entropy(local_data, decision_attr, attr, value, decision_positive_value, decision_negative_value)
 		attribute_gain  -= (get_number_of_value_occurance(local_data,attr,value) / len(local_data) * value_entropy)
-	print("Gain for attribute", attr, "is", attribute_gain)
 	return attribute_gain
 
 def get_best_node(local_data, decision_attr, decision_positive_value, decision_negative_value):
@@ -128,7 +105,6 @@ def get_best_node(local_data, decision_attr, decision_positive_value, decision_n
 			if attribute_gain > highest_value:
 				highest_value = attribute_gain
 				best_attribute = attribute
-	print("Highest gain given by attribute:", best_attribute)
 	return best_attribute
 
 def build_new_data_set(local_data, root_attribute, root_attribute_value):
@@ -138,8 +114,6 @@ def build_new_data_set(local_data, root_attribute, root_attribute_value):
 			data_set.append(copy.deepcopy(element))
 	for element in data_set:
 		del(element[root_attribute])
-	print(" ")
-	(pprint.PrettyPrinter()).pprint(data_set)
 	return data_set
 
 def check_for_uniform_decision(local_data, decision_attribute, root_attribute, root_attribute_value):
@@ -152,7 +126,6 @@ def check_for_uniform_decision(local_data, decision_attribute, root_attribute, r
 			if value != element[decision_attribute]:
 				check += 1
 	if check == 0:
-		print("\nUniform value available for ", root_attribute, "=", root_attribute_value, " -> ", local_data[0][decision_attribute] )
 		return 0
 	else:
 		return 1
@@ -175,34 +148,15 @@ def main():
 	nodes_processed = []
 	result = []
 
-	print("Number of elements in data array: ", len(data))
-
-	#get_data_entropy(data, "PLAY")
-	#get_attribute_value_entropy(data, "PLAY", "AURA", 2, 1, 0)
-	#get_attribute_gain(data,"PLAY","AURA",1,0)
-	#get_attribute_gain(data,"PLAY","TEMP",1,0)
-	#get_attribute_gain(data,"PLAY","WILG",1,0)
-	#get_attribute_gain(data,"PLAY","WIND",1,0)
-
 	node_attribute = get_best_node(data, "PLAY",1,0)
-
 	nodes_processed.append(node_attribute)
-
 	node_attribute_values = get_unique_values(data,node_attribute)
-	print("\nprocessing values")
 	for value in node_attribute_values:
 		local_data_set = build_new_data_set(data, node_attribute, value)
 		uniform = check_for_uniform_decision(local_data_set,"PLAY", node_attribute, value)
 		if uniform != 0:
 			next_node_attribute = get_best_node(local_data_set, "PLAY",1,0)
-			print("Best next node for", node_attribute, "and value", value, "is", next_node_attribute)
-
-
-	# Build tree
-		# get root
-		# for each values of root
-			# create new data table limited to particular value
-			# get attribute with highest gain and set as sub root
+			
 
 
 if __name__ == "__main__":
