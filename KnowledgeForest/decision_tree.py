@@ -37,6 +37,7 @@ def get_number_of_unique_values(local_data, attr):
 			values.extend([element[attr]])
 	return len(values)
 
+
 def get_unique_values(local_data, attr):
 	values = []
 	for element in local_data:
@@ -79,12 +80,14 @@ def get_attribute_value_entropy(local_data, decision_attr, attr, attr_value, dec
 			  - (positive_values / (negative_values + positive_values)) \
 			  * math.log2(positive_values / (negative_values + positive_values))
 
+
 def get_number_of_value_occurance(local_data, attr, attr_value):
 	counter = 0
 	for element in local_data:
 		if element[attr] == attr_value:
 			counter += 1
 	return counter
+
 
 def get_attribute_gain(local_data, decision_attr, attr, decision_positive_value, decision_negative_value):
 	attribute_gain = get_data_entropy(local_data, decision_attr)
@@ -93,6 +96,7 @@ def get_attribute_gain(local_data, decision_attr, attr, decision_positive_value,
 		value_entropy = get_attribute_value_entropy(local_data, decision_attr, attr, value, decision_positive_value, decision_negative_value)
 		attribute_gain  -= (get_number_of_value_occurance(local_data,attr,value) / len(local_data) * value_entropy)
 	return attribute_gain
+
 
 def get_best_node(local_data, decision_attr, decision_positive_value, decision_negative_value):
 	global nodes_processed
@@ -107,6 +111,7 @@ def get_best_node(local_data, decision_attr, decision_positive_value, decision_n
 				best_attribute = attribute
 	return best_attribute
 
+
 def build_new_data_set(local_data, root_attribute, root_attribute_value):
 	data_set = []
 	for element in local_data:
@@ -115,6 +120,7 @@ def build_new_data_set(local_data, root_attribute, root_attribute_value):
 	for element in data_set:
 		del(element[root_attribute])
 	return data_set
+
 
 def check_for_uniform_decision(local_data, decision_attribute, root_attribute, root_attribute_value):
 	check = 0
@@ -130,6 +136,7 @@ def check_for_uniform_decision(local_data, decision_attribute, root_attribute, r
 	else:
 		return 1
 
+
 def build_tree(local_data, decision_attribute, decision_positive_value, decision_negative_value):
 	global nodes_processed
 	root = None
@@ -139,9 +146,11 @@ def build_tree(local_data, decision_attribute, decision_positive_value, decision
 	else:
 		root_attribute_values = get_unique_values(data,root)
 
+
 def get_main_root(local_data, decision_attribute, decision_positive_value, decision_negative_value):
 	node_attribute = get_best_node(local_data, decision_attribute,decision_positive_value,decision_negative_value)
 	pass
+
 
 def main():
 	global nodes_processed, result
@@ -157,7 +166,6 @@ def main():
 		if uniform != 0:
 			next_node_attribute = get_best_node(local_data_set, "PLAY",1,0)
 			
-
 
 if __name__ == "__main__":
 	main()
