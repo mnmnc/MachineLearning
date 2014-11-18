@@ -1,6 +1,7 @@
 import pprint
 import math
 import copy
+from colorama import Fore
 
 # AURA	0 Sunny | 1 Cloud | 2 Rain
 # TEMP	0 High  | 1 Medium | 2 Low
@@ -33,7 +34,7 @@ def count_values_for_attribute(local_data, attr, attr_value):
 	for element in local_data:
 		if element[attr] == attr_value:
 			counter += 1
-	#print("Counted", counter, attr_value, "values for", attr, "attribute.")
+	if debug == 1: print(debug_prefix + "Counted", counter, attr_value, "values for", attr, "attribute." + debug_postfix)
 	return counter
 
 
@@ -108,13 +109,13 @@ def get_attribute_gain(local_data, decision_attr, attr, decision_positive_value,
 	#		(Attr_neg/(Attr_pos+Attr_neg))log2(Attr_neg/(Attr_pos+Attr_neg))
 
 	attribute_gain = get_data_entropy(local_data, decision_attr)
-	#print("Full data entropy:", attribute_gain)
+	if debug == 1: print(debug_prefix + "Full data entropy:", str(attribute_gain) + debug_postfix)
 	attribute_values = get_unique_values(local_data, attr)
 	for value in attribute_values:
-		#print("Calculating for", attr, " for value", value)
+		if debug == 1: print(debug_prefix + "Calculating for", attr, " for value", str(value) + debug_postfix)
 		value_entropy = get_attribute_value_entropy(local_data, decision_attr, attr, value, decision_positive_value, decision_negative_value)
 		attribute_gain  -= (get_number_of_value_occurance(local_data,attr,value) / len(local_data) * value_entropy)
-	#print("Gain for attribute", attr, "is", attribute_gain)
+	if debug == 1: print(debug_prefix + "Gain for attribute", attr, "is", str(attribute_gain) + debug_postfix)
 	return attribute_gain
 
 def get_best_node(local_data, decision_attr, decision_positive_value, decision_negative_value):
@@ -128,7 +129,7 @@ def get_best_node(local_data, decision_attr, decision_positive_value, decision_n
 			if attribute_gain > highest_value:
 				highest_value = attribute_gain
 				best_attribute = attribute
-	#print("Highest gain given by attribute:", best_attribute)
+	if debug == 1: print(debug_prefix + "Highest gain given by attribute:", best_attribute + debug_postfix)
 	return best_attribute
 
 def build_new_data_set(local_data, root_attribute, root_attribute_value):
@@ -138,7 +139,7 @@ def build_new_data_set(local_data, root_attribute, root_attribute_value):
 			data_set.append(copy.deepcopy(element))
 	for element in data_set:
 		del(element[root_attribute])
-	#(pprint.PrettyPrinter()).pprint(data_set)
+	if debug == 1: (pprint.PrettyPrinter(indent=8)).pprint(data_set)
 	return data_set
 
 def check_for_uniform_decision(local_data, decision_attribute, root_attribute, root_attribute_value):
@@ -159,15 +160,13 @@ def check_for_uniform_decision(local_data, decision_attribute, root_attribute, r
 def build_tree(local_data, current_root, decision_attribute, decision_positive_value, decision_negative_value, indent):
 	global result
 	if current_root == None:
-		print("No root dected. Searching for first one.")
+		print(debug_prefix + "No root dected. Searching for first one." + debug_postfix)
 		new_root = get_best_node(local_data, decision_attribute, decision_positive_value, decision_negative_value)
-		print("New root found:", new_root)
-		#tree = {}
-		#result.update(tree)
+		print(debug_prefix+ "New root found:", new_root + debug_postfix)
 		indent = "\t"
 		build_tree(local_data, new_root, decision_attribute, decision_positive_value, decision_negative_value, indent)
 	else:
-		#print("Getting unique values for ", current_root)
+		if debug == 1:  print(debug_prefix + "Getting unique values for ", current_root + debug_postfix)
 		new_root_values = get_unique_values(local_data, current_root)
 		indent += "\t"
 		for value in new_root_values:
@@ -176,22 +175,19 @@ def build_tree(local_data, current_root, decision_attribute, decision_positive_v
 			uniform_decision = check_for_uniform_decision(new_data_set, decision_attribute, current_root, value)
 			if uniform_decision == 0:
 				print(indent +"\tUniform value available for ", current_root, "=", value, " -> ", new_data_set[0][decision_attribute] )
-				#tree.update({current_root: {value:{"decision":new_data_set[0][decision_attribute]}}})
 			else:
 				next_root = get_best_node(new_data_set, decision_attribute, decision_positive_value, decision_negative_value)
-				#print("\tFound new root:", next_root)
-				#subroot = {}
-				#tree.update({current_root: {value: {next_root: subroot} }})
+				if debug == 1: print("\tFound new root:", next_root)
 				build_tree(new_data_set, next_root, decision_attribute, decision_positive_value, decision_negative_value, indent)
-		#result.update(tree)
-		#print(tree)
-
 
 
 def main():
-	global nodes_processed, result
+	global nodes_processed, result , debug, debug_prefix, debug_postfix
 	nodes_processed = []
 	result = {}
+	debug = 1
+	debug_prefix = "\t\t[DBG] " + Fore.BLUE
+	debug_postfix = Fore.RESET
 
 	build_tree(data, None, "PLAY", 1, 0, None)
 
