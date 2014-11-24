@@ -1,6 +1,7 @@
 import math
 import random
 import pprint
+import copy
 
 small_map = {
 	"AA": {"x": 0, "y": 13},
@@ -197,21 +198,58 @@ def create_initial_population(map):
 				population.extend([new_being])
 	return population
 
+def pick_single_best_from(population):
+	best_path_score = 999999
+	best_path = None
+	for being in population:
+		being_score = get_path_length(being)
+		if being_score < best_path_score:
+			best_path_score = being_score
+			best_path = being
+	return best_path
+
+def pick_best(population):
+	local_population = population[:]
+	best = []
+	for i in range(int(len(population)/2)):
+		picked_best = pick_single_best_from(local_population)
+		local_population.remove(picked_best)
+		best.extend([picked_best])
+	return best
+
+def crossover(mommie, daddie):
+	random.seed()
+	crossing_point_1 = int(random.random() * len(mommie))
+	crossing_point_2 = int(random.random() * len(mommie))
+	smaller = 0
+	bigger = 0
+
+	if crossing_point_1 == crossing_point_2:
+		return (mommie, daddie)
+	else:
+		# get smaller
+		if crossing_point_1 < crossing_point_2:
+			smaller = crossing_point_1
+			bigger = crossing_point_2
+		else:
+			bigger = crossing_point_1
+			smaller = crossing_point_2
+
+	
+
 
 def main():
 	printer = pprint.PrettyPrinter(indent=4)
 	population = create_initial_population(small_map)
 
+	# PICK BEST
+	print("Best:")
+	current_best = pick_best(population)
 
-	lowest_sum = 99999999
-	best_path = None
-	for being in population:
-		sum = get_path_length(being)
-		if sum < lowest_sum:
-			lowest_sum = sum
-			best_path = being
-	print("Best found:", best_path)
-	print("Suma:", lowest_sum)
+	# CROSSOVER
+	new_population = copy.deepcopy(current_best)
+
+
 
 
 if __name__ == "__main__":
