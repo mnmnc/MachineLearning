@@ -219,6 +219,9 @@ def pick_best(population):
 
 def crossover(mommie, daddie):
 	random.seed()
+	if random.random() > 0.7:
+		return (mommie, daddie)
+
 	crossing_point_1 = int(random.random() * len(mommie))
 	crossing_point_2 = int(random.random() * len(mommie))
 	smaller = 0
@@ -226,16 +229,17 @@ def crossover(mommie, daddie):
 
 	if crossing_point_1 == crossing_point_2:
 		return (mommie, daddie)
+	# get smaller
+	if crossing_point_1 < crossing_point_2:
+		smaller = crossing_point_1
+		bigger = crossing_point_2
 	else:
-		# get smaller
-		if crossing_point_1 < crossing_point_2:
-			smaller = crossing_point_1
-			bigger = crossing_point_2
-		else:
-			bigger = crossing_point_1
-			smaller = crossing_point_2
+		bigger = crossing_point_1
+		smaller = crossing_point_2
 
-	
+	daughter = []
+	son = []
+
 
 
 def main():
