@@ -227,8 +227,12 @@ def crossover(mommie, daddie):
 	smaller = 0
 	bigger = 0
 
+	print("Cross 1", crossing_point_1)
+	print("Cross 2", crossing_point_2)
+
 	if crossing_point_1 == crossing_point_2:
 		return (mommie, daddie)
+
 	# get smaller
 	if crossing_point_1 < crossing_point_2:
 		smaller = crossing_point_1
@@ -240,18 +244,234 @@ def crossover(mommie, daddie):
 	daughter = []
 	son = []
 
+	daughter = mommie[:]
+	son = daddie[:]
 
+	daughter[smaller:bigger] = daddie[smaller:bigger]
+	son[smaller:bigger] = mommie[smaller:bigger]
+
+	print("MOM:", mommie)
+	print("DAD:", daddie)
+	print("DAU:", daughter)
+	print("SON:", son)
+
+	for i in range(smaller):
+		daughter[i] = ' '
+		son[i] = ' '
+
+	print("DAU:", daughter)
+	print("SON:", son)
+
+	for i in range(bigger, len(mommie)):
+		daughter[i] = ' '
+		son[i] = ' '
+
+	print("DAU:", daughter)
+	print("SON:", son)
+
+	mommie_genpool = mommie[smaller:bigger]
+	daddie_genpool = daddie[smaller:bigger]
+
+	rules = []
+	for i in range(len(mommie_genpool)):
+		rules.append({mommie_genpool[i]:daddie_genpool[i]})
+		rules.append({daddie_genpool[i]:mommie_genpool[i]})
+
+	print(rules)
+
+	for i in range(len(daughter)):
+		if daughter[i] == ' ':
+			for rule in rules:
+				key = list(rule.keys())[0]
+				if key == mommie[i]:
+					daughter[i] = rule[key]
+					print("Setting daughter", i, "to", rule[key] )
+
+	for i in range(len(son)):
+		if son[i] == ' ':
+			for rule in rules:
+				key = list(rule.keys())[0]
+				if key == daddie[i]:
+					son[i] = rule[key]
+					print("Setting son", i, "to", rule[key] )
+
+	print("DAU:", daughter)
+	print("SON:", son)
+
+	missing_in_mommie = []
+	missing_in_daddie = []
+
+	for i in range(len(daughter)):
+		if daughter[i] == ' ':
+			missing_in_mommie.append(mommie[i])
+
+	for i in range(len(son)):
+		if son[i] == ' ':
+			missing_in_daddie.append(daddie[i])
+
+	index = 0
+	for i in range(len(daughter)):
+		if daughter[i] == ' ':
+			try:
+				daughter[i] = missing_in_daddie[index]
+			except: # required due to index out of bounds
+				daughter[i] = mommie[i]
+			index+=1
+
+	index = 0
+	for i in range(len(son)):
+		if son[i] == ' ':
+			try:
+				son[i] = missing_in_mommie[index]
+			except: # required due to index out of bounds
+				son[i] = daddie[i]
+			index+=1
+
+	print("FINAL")
+	print("MOM:", mommie)
+	print("DAD:", daddie)
+
+	print("DAU:", daughter)
+	print("SON:", son)
+
+	# MUTATION
+	print("AFTER MUTATION:")
+	random.seed()
+	if random.random() < 0.021:
+	#if random.random() > 0:
+
+		crossing_point_1 = int(random.random() * len(mommie))
+		crossing_point_2 = int(random.random() * len(mommie))
+		if crossing_point_1 != crossing_point_2:
+			smaller = 0
+			bigger = 0
+			# get smaller
+			if crossing_point_1 < crossing_point_2:
+				smaller = crossing_point_1
+				bigger = crossing_point_2
+			else:
+				bigger = crossing_point_1
+				smaller = crossing_point_2
+
+			print("Mutation begins at:", smaller)
+			print("Mutation ends at:", bigger)
+
+			mutation = daughter[smaller:bigger]
+			mutation.reverse()
+			print("Mutating:", daughter[smaller:bigger], "to", mutation )
+			daughter[smaller:bigger] = mutation
+
+	random.seed()
+	if random.random() < 0.021:
+	#if random.random() > 0:
+		crossing_point_1 = int(random.random() * len(mommie))
+		crossing_point_2 = int(random.random() * len(mommie))
+
+		if crossing_point_1 != crossing_point_2:
+			smaller = 0
+			bigger = 0
+			# get smaller
+			if crossing_point_1 < crossing_point_2:
+				smaller = crossing_point_1
+				bigger = crossing_point_2
+			else:
+				bigger = crossing_point_1
+				smaller = crossing_point_2
+
+			print("Mutation begins at:", smaller)
+			print("Mutation ends at:", bigger)
+
+			mutation = son[smaller:bigger]
+			mutation.reverse()
+			print("Mutating:", son[smaller:bigger], "to", mutation )
+			son[smaller:bigger] = mutation
+
+	print("DAU:", daughter)
+	print("SON:", son)
+	return (daughter, son)
+
+def pick_two(population):
+	random.seed()
+	pick1 = int(random.random() * len(population))
+	pick2 = 0
+	while pick2 == 0 or pick2 == pick1:
+		pick2 = int(random.random() * len(population))
+	return (population[pick1], population[pick2])
+
+def get_population_average(population):
+	sum = 0
+	for being in population:
+		sum += get_path_length(being)
+	return (sum/len(population))
 
 def main():
 	printer = pprint.PrettyPrinter(indent=4)
 	population = create_initial_population(small_map)
 
-	# PICK BEST
-	print("Best:")
+	for being in population:
+		print(being)
+
+
+	print("Picking best of population.")
+
 	current_best = pick_best(population)
 
+	new_population = []
+
+	print("Creating new population.")
+	while len(new_population) < len(population):
+		mommie, daddie = pick_two(current_best)
+		daughter, son = crossover(mommie, daddie)
+		new_population.append(daughter)
+		new_population.append(son)
+
+	print("New population completed.")
+	for being in new_population:
+		print(being)
+
+
+	print("Best one:", pick_single_best_from(population))
+	print("Path len:", get_path_length(pick_single_best_from(population)))
+	print("Population average:", get_population_average(population))
+	print("NBest one:", pick_single_best_from(new_population))
+	print("NPath len:", get_path_length(pick_single_best_from(new_population)))
+	print("Population average:", get_population_average(new_population))
+
+
+
+	new_population2 = []
+	current_best = pick_best(new_population)
+
+
+	print("Creating new population.")
+	while len(new_population2) < len(new_population):
+		mommie, daddie = pick_two(current_best)
+		daughter, son = crossover(mommie, daddie)
+		new_population2.append(daughter)
+		new_population2.append(son)
+
+
+	print("New population completed.")
+	for being in new_population2:
+		print(being)
+
+	print("Best one:", pick_single_best_from(population))
+	print("Path len:", get_path_length(pick_single_best_from(population)))
+	print("Population average:", get_population_average(population))
+	print("NBest one:", pick_single_best_from(new_population))
+	print("NPath len:", get_path_length(pick_single_best_from(new_population)))
+	print("Population average:", get_population_average(new_population))
+	print("N2Best one:", pick_single_best_from(new_population2))
+	print("N2Path len:", get_path_length(pick_single_best_from(new_population2)))
+	print("Population average:", get_population_average(new_population2))
+
+	#mom = ['AU', 'AA', 'AF', 'AE', 'AQ', 'AC', 'AX', 'AO', 'AI', 'AK', 'AN', 'AB', 'AW', 'AL', 'AP', 'AG', 'AZ', 'AT', 'AH', 'AY', 'AJ', 'AS', 'AV', 'AM', 'AR', 'AD']
+	#dad = ['AI', 'AL', 'AC', 'AY', 'AZ', 'AQ', 'AH', 'AG', 'AR', 'AP', 'AW', 'AM', 'AV', 'AS', 'AE', 'AT', 'AX', 'AU', 'AN', 'AA', 'AK', 'AO', 'AB', 'AF', 'AD', 'AJ']
+
+	#crossover(mom, dad)
+
 	# CROSSOVER
-	new_population = copy.deepcopy(current_best)
+
 
 
 
