@@ -487,9 +487,10 @@ def crossover(mommie, daddie):
 	check_for_cycles(son)
 
 	# MUTATION
-	#print("AFTER MUTATION:")
+
 	random.seed()
 	if random.random() < 0.021:
+		#print("\t\t\t\t MUTATION")
 	#if random.random() > 0:
 
 		crossing_point_1 = int(random.random() * len(mommie))
@@ -626,9 +627,9 @@ def check_for_cycles(path):
 
 def main():
 	printer = pprint.PrettyPrinter(indent=4)
-	population = create_initial_population(medium_map)
+	population = create_initial_population(small_map)
 
-	solve(100, population)
+	solve(1000, population)
 
 	# for being in population:
 	# 	print(being)
