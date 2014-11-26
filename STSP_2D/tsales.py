@@ -45,60 +45,6 @@ small_map = {
 	"AZ": {"x": 18, "y": 11}
 }
 
-medium_map = {
-	"AA": {"x": 0, "y": 13},
-	"AB": {"x": 0, "y": 26},
-	"AC": {"x": 0, "y": 27},
-	"AD": {"x": 0, "y": 39},
-	"AE": {"x": 2, "y": 0},
-	"AF": {"x": 5, "y": 13},
-	"AG": {"x": 5, "y": 19},
-	"AH": {"x": 5, "y": 25},
-	"AI": {"x": 5, "y": 31},
-	"AJ": {"x": 5, "y": 37},
-	"AK": {"x": 5, "y": 43},
-	"AL": {"x": 5, "y": 8},
-	"AM": {"x": 8, "y": 0},
-	"AN": {"x": 9, "y": 10},
-	"AO": {"x": 10, "y": 10},
-	"AP": {"x": 11, "y": 10},
-	"AQ": {"x": 12, "y": 10},
-	"AR": {"x": 12, "y": 5},
-	"AS": {"x": 15, "y": 13},
-	"AT": {"x": 15, "y": 19},
-	"AU": {"x": 15, "y": 25},
-	"AV": {"x": 15, "y": 31},
-	"AW": {"x": 15, "y": 37},
-	"AX": {"x": 15, "y": 43},
-	"AY": {"x": 15, "y": 8},
-	"AZ": {"x": 18, "y": 11},
-	"BA": {"x": 18, "y": 13},
-	"BB": {"x": 18, "y": 15},
-	"BC": {"x": 18, "y": 17},
-	"BD": {"x": 18, "y": 19},
-	"BE": {"x": 18, "y": 21},
-	"BF": {"x": 18, "y": 23},
-	"BG": {"x": 18, "y": 25},
-	"BH": {"x": 18, "y": 27},
-	"BI": {"x": 18, "y": 29},
-	"BJ": {"x": 18, "y": 31},
-	"BK": {"x": 18, "y": 33},
-	"BL": {"x": 18, "y": 35},
-	"BM": {"x": 18, "y": 37},
-	"BN": {"x": 18, "y": 39},
-	"BO": {"x": 18, "y": 41},
-	"BP": {"x": 18, "y": 42},
-	"BQ": {"x": 18, "y": 44},
-	"BR": {"x": 18, "y": 45},
-	"BS": {"x": 25, "y": 11},
-	"BT": {"x": 25, "y": 15},
-	"BU": {"x": 25, "y": 22},
-	"BV": {"x": 25, "y": 23},
-	"BW": {"x": 25, "y": 24},
-	"BX": {"x": 25, "y": 26},
-	"BY": {"x": 25, "y": 28},
-	"BZ": {"x": 25, "y": 29}
-}
 
 large_map = {
 	"AA": {"x": 0, "y": 13},
@@ -236,8 +182,9 @@ large_map = {
 
 
 def get_distance(node_a, node_b):
-	p1 = small_map[node_a]["x"] - small_map[node_b]["x"]
-	p2 = small_map[node_a]["y"] - small_map[node_b]["y"]
+	global map
+	p1 = map[node_a]["x"] - map[node_b]["x"]
+	p2 = map[node_a]["y"] - map[node_b]["y"]
 	result = math.pow(p1, 2) + math.pow(p2, 2)
 	return math.sqrt(result)
 
@@ -627,9 +574,14 @@ def check_for_cycles(path):
 
 def main():
 	printer = pprint.PrettyPrinter(indent=4)
-	population = create_initial_population(small_map)
 
-	solve(1000, population)
+	global map
+	map = large_map
+
+	population = create_initial_population(map)
+
+
+	solve(300, population)
 
 	# for being in population:
 	# 	print(being)
