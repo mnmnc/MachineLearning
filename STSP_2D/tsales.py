@@ -522,13 +522,18 @@ def check_for_cycles(path):
 
 def main():
 
-	# VARIABLES
+	# GLOBAL VARIABLES
 	global map, mutation_threshold, worst_possible_path_length
-	maps = [mini_map, small_map, large_map]
-	map = maps[1]
+
 	mutation_threshold = 0.021
 	iteration_threshold = 1000
 	worst_possible_path_length = 9999999999
+
+	# DATA SETS
+	maps = [mini_map, small_map, large_map]
+
+	# CHOSEN DATA SET
+	map = maps[1]
 
 	# INITIATE
 	population = create_initial_population(map)
