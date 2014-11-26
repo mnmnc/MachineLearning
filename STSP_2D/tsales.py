@@ -188,12 +188,14 @@ def get_distance(node_a, node_b):
 	result = math.pow(p1, 2) + math.pow(p2, 2)
 	return math.sqrt(result)
 
+
 def get_path_length(nodes):
 	"""CALCULATING LENGTH FOR GIVEN PATH"""
 	sum = 0
 	for i in range(len(nodes)-1):
 		sum += get_distance(nodes[i], nodes[i+1])
 	return sum
+
 
 def create_initial_population(map):
 	"""CREATES AN INITIAL POPULATION BY RANDOMLY REORDERING THE DATA"""
@@ -221,6 +223,7 @@ def create_initial_population(map):
 				population.extend([new_being])
 	return population
 
+
 def pick_single_best_from(population):
 	"""FINDS A LEADER IN POPULATION"""
 	global worst_possible_path_length
@@ -233,6 +236,7 @@ def pick_single_best_from(population):
 			best_path = being
 	return best_path
 
+
 def pick_best(population):
 	"""FINDS BEST HALF OF POPULATION BASED ON SOLUTION QUALITY"""
 	local_population = population[:]
@@ -242,6 +246,7 @@ def pick_best(population):
 		local_population.remove(picked_best)
 		best.extend([picked_best])
 	return best
+
 
 def crossover(mommy, daddy):
 	"""CREATES DESCENDANTS FROM PARENTS"""
@@ -253,7 +258,7 @@ def crossover(mommy, daddy):
 	random.seed()
 	if random.random() > 0.7:
 		# IF THEY DO NOT LIKE EACH OTHER - EXIT
-		return (mommy, daddy)
+		return mommy, daddy
 
 	# PROCEED WITH CROSSOVER
 	#
@@ -261,12 +266,9 @@ def crossover(mommy, daddy):
 	crossing_point_1 = int(random.random() * len(mommy))
 	crossing_point_2 = int(random.random() * len(mommy))
 
-	smaller = 0
-	bigger = 0
-
 	# IF CROSSING POINTS ARE THE SAME - THE CROSSING IS IMPOSSIBLE
 	if crossing_point_1 == crossing_point_2:
-		return (mommy, daddy)
+		return mommy, daddy
 
 	# OTHERWISE GET CROSSING POINTS IN ORDER
 	if crossing_point_1 < crossing_point_2:
@@ -281,8 +283,8 @@ def crossover(mommy, daddy):
 	son = daddy[:]
 
 	# CROSS PARENTS' GENES BETWEEN CROSSING POINTS
-	daughter[smaller:bigger] = daddy[smaller:bigger]
-	son[smaller:bigger] = mommy[smaller:bigger]
+	daughter[smaller:bigger] = daddy[smaller: bigger]
+	son[smaller:bigger] = mommy[smaller: bigger]
 
 	# REMOVE GENES FROM PRIME PARENT
 	# DESCENDANT | PRIME PARENT
@@ -303,8 +305,8 @@ def crossover(mommy, daddy):
 	# CREATES RULES BASED ON GENE POOLS
 	rules = []
 	for i in range(len(mommy_gene_pool)):
-		rules.append({mommy_gene_pool[i]:daddy_gene_pool[i]})
-		rules.append({daddy_gene_pool[i]:mommy_gene_pool[i]})
+		rules.append({mommy_gene_pool[i]: daddy_gene_pool[i]})
+		rules.append({daddy_gene_pool[i]: mommy_gene_pool[i]})
 
 	# APPLY RULES BASED ON GENE POOLS
 
@@ -359,15 +361,14 @@ def crossover(mommy, daddy):
 	for i in range(len(daughter)):
 		if daughter[i] == ' ':
 			daughter[i] = missing_in_daddy[index]
-			index+=1
+			index += 1
 
 	# FILLING LAST EMPTY GENES IN SON WITH MOMMY GENES
 	index = 0
 	for i in range(len(son)):
 		if son[i] == ' ':
 			son[i] = missing_in_mommy[index]
-			index+=1
-
+			index += 1
 
 	# MUTATION BEGINS HERE
 	#
@@ -380,8 +381,6 @@ def crossover(mommy, daddy):
 
 		# IF MUTATION POINTS ARE DIFFERENT
 		if crossing_point_1 != crossing_point_2:
-			smaller = 0
-			bigger = 0
 
 			# GET THEM IN ORDER
 			if crossing_point_1 < crossing_point_2:
@@ -405,8 +404,6 @@ def crossover(mommy, daddy):
 
 		# IF MUTATION POINTS ARE DIFFERENT
 		if crossing_point_1 != crossing_point_2:
-			smaller = 0
-			bigger = 0
 
 			# GET THEM IN ORDER
 			if crossing_point_1 < crossing_point_2:
@@ -425,6 +422,7 @@ def crossover(mommy, daddy):
 	result = [daughter, son]
 	return result
 
+
 def pick_two(population):
 	"""RANDOMLY PICKS TWO BEINGS FROM GIVEN POPULATION"""
 	random.seed()
@@ -432,24 +430,24 @@ def pick_two(population):
 	pick2 = 0
 	while pick2 == 0 or pick2 == pick1:
 		pick2 = int(random.random() * len(population))
-	return (population[pick1], population[pick2])
+	return population[pick1], population[pick2]
+
 
 def get_population_average(population):
 	"""CALCULATES AVERAGE SOLUTION QUALITY IN GIVEN POPULATION"""
 	sum = 0
 	for being in population:
 		sum += get_path_length(being)
-	return (sum/len(population))
+	return sum/len(population)
 
 
 def solve(iterations, population):
-	'''Processes TSP with given data over x iterations.'''
+	"""Processes TSP with given data over x iterations."""
 
 	# VARIABLES FOR SUMMARY PURPOSES
 	best_path = []
 	global worst_possible_path_length
 	best_path_len = worst_possible_path_length
-
 
 	iteration_index = 0
 	local_population = population[:]
@@ -496,7 +494,7 @@ def solve(iterations, population):
 		# SHOW CURRENT BEST PATH
 		path_length = get_path_length(pick_single_best_from(next_population))
 		population_avg = get_population_average(next_population)
-		print("Best path at iteration", (i+1), "has length", path_length, "[AVG]:", population_avg )
+		print("Best path at iteration", (i+1), "has length", path_length, "[AVG]:", population_avg)
 
 		# T + 1
 		# SET NEXT POPULATION AS CURRENT ONE AND BEGIN NEXT ITERATION
@@ -505,7 +503,7 @@ def solve(iterations, population):
 	# PRINT SUMMARY
 	print("\nBest one:", best_path)
 	print("Path len:", best_path_len)
-	print("Best reached in", iteration_index ,"iteration")
+	print("Best reached in", iteration_index, "iteration")
 
 
 def check_for_cycles(path):
@@ -514,10 +512,10 @@ def check_for_cycles(path):
 		counter = 0
 		for node2 in path:
 			if node == node2:
-				counter+=1
+				counter += 1
 		if counter > 1:
-			return 1 # IF CYCLE DETECTED
-	return 0 # IF NO CYCLES
+			return 1  	# IF CYCLE DETECTED
+	return 0  			# IF NO CYCLES
 
 
 def main():
