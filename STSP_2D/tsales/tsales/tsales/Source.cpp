@@ -44,6 +44,7 @@ using namespace std;
 
 // COLLECTION FUNCTIONS
 	map<string, vector<int>> build_data_map();
+	map<string, vector<int> > build_bigger_data_map();
 	vector<string> get_nodes(map<string, vector<int> > mapa);
 	vector<vector<string>> create_initial_population(map<string, vector<int>> mapa, unsigned int population_size);
 	
@@ -70,14 +71,16 @@ int main(){
 	
 	// BUILDING DATA MAP
 	map<string, vector<int> > mapa = build_data_map();
-	population_size = mapa.size();
+	map<string, vector<int> > mapa2 = build_bigger_data_map();
+
+	population_size = mapa2.size();
 
 	// CREATING INITIAL POPULATION
-	vector<vector<string>> population_1 = create_initial_population(mapa, population_size);
+	vector<vector<string>> population_1 = create_initial_population(mapa2, population_size);
 
 	// SOLVING
 	clock_t begin_pt = clock();
-	solve(population_1, mapa, iteration_threshold);
+	solve(population_1, mapa2, iteration_threshold);
 	//clock_t end_pt = clock();
 	std::cout << "Time spent solving " << double(clock() - begin_pt) / CLOCKS_PER_SEC << endl;
 
@@ -221,7 +224,6 @@ vector<vector<string>> mutation(vector<vector<string>> children, map<string, vec
 
 	return mutated_children;
 }
-
 
 vector<vector<string>> crossover(vector<vector<string>> parents, map<string, vector<int> > mapa){
 	// CREATES DESCENDANTS
@@ -578,5 +580,142 @@ map<string, vector<int> > build_data_map(){
 	mapa["J"] = point;
 	point.clear();
 
+	return mapa;
+}
+
+map<string, vector<int> > build_bigger_data_map(){
+
+	vector<int> point;
+	map<string, vector<int> > mapa;
+
+	point.push_back(0);
+	point.push_back(13);
+	mapa["A"] = point;
+	point.clear();
+
+	point.push_back(0);
+	point.push_back(26);
+	mapa["B"] = point;
+	point.clear();
+
+	point.push_back(0);
+	point.push_back(27);
+	mapa["C"] = point;
+	point.clear();
+
+	point.push_back(0);
+	point.push_back(39);
+	mapa["D"] = point;
+	point.clear();
+
+	point.push_back(2);
+	point.push_back(0);
+	mapa["E"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(13);
+	mapa["F"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(19);
+	mapa["G"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(25);
+	mapa["H"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(31);
+	mapa["I"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(37);
+	mapa["J"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(43);
+	mapa["K"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(8);
+	mapa["L"] = point;
+	point.clear();
+
+	point.push_back(8);
+	point.push_back(0);
+	mapa["M"] = point;
+	point.clear();
+
+	point.push_back(9);
+	point.push_back(10);
+	mapa["N"] = point;
+	point.clear();
+
+	point.push_back(10);
+	point.push_back(10);
+	mapa["O"] = point;
+	point.clear();
+
+	point.push_back(11);
+	point.push_back(10);
+	mapa["P"] = point;
+	point.clear();
+
+	point.push_back(12);
+	point.push_back(10);
+	mapa["Q"] = point;
+	point.clear();
+
+	point.push_back(12);
+	point.push_back(5);
+	mapa["R"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(13);
+	mapa["S"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(19);
+	mapa["T"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(25);
+	mapa["U"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(31);
+	mapa["V"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(37);
+	mapa["W"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(43);
+	mapa["X"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(8);
+	mapa["Y"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(11);
+	mapa["Z"] = point;
+	point.clear();
 	return mapa;
 }
