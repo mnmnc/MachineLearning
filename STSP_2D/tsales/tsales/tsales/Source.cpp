@@ -9,6 +9,7 @@
 #include <climits>
 #include <stdlib.h>
 #include <time.h>
+#include <ctime>
 
 int DEBUG = 0;
 
@@ -65,8 +66,16 @@ int main(){
 	unsigned int iteration_threshold = 100;
 	unsigned int worst_possible_path_lenght = UINT_MAX;
 
+	clock_t begin = clock();
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	cout << "Time spent " << elapsed_secs << endl; 
+
 	// BUILDING DATA MAP
 	map<string, vector<int> > mapa = build_data_map();
+	population_size = mapa.size();
+
+
 
 	// CREATING INITIAL POPULATION
 	vector<vector<string>> population_1 = create_initial_population(mapa, population_size);
@@ -205,23 +214,23 @@ void solve(vector<vector<string>> population_1, map<string, vector<int> > mapa, 
 
 
 vector<vector<string>> mutation(vector<vector<string>> children, map<string, vector<int> > mapa){
-	cout << "In mutation" << endl;
+	if (DEBUG == 1) cout << "In mutation" << endl;
 	if ( get_random_num(1000) > 21 ){
 	//if ( get_random_num(20) > 21 ){
-		cout << "No mutation" << endl;
+		if (DEBUG == 1) cout << "No mutation" << endl;
 		return children;
 	} 
 
-	print_array_of_paths(children);
+	if (DEBUG == 1) print_array_of_paths(children);
 	vector<vector<string>> mutated_children;
 
-	cout << "1" << endl;
+	if (DEBUG == 1) cout << "1" << endl;
 	vector<string> daughter = children.at(0);
-	cout << "2" << endl;
+	if (DEBUG == 1) cout << "2" << endl;
 	vector<string> son = children.at(1);
-	cout << "3" << endl;
+	if (DEBUG == 1) cout << "3" << endl;
 
-	cout << "Searching for mutation points" << endl;
+	if (DEBUG == 1) cout << "Searching for mutation points" << endl;
 	// CHOOSE MUTATION POINTS
 	int mutation_point_1 = get_random_num( (children.at(0)).size() );
 	int mutation_point_2 = get_random_num( (children.at(0)).size() );
@@ -229,13 +238,13 @@ vector<vector<string>> mutation(vector<vector<string>> children, map<string, vec
 		mutation_point_2 = get_random_num( (children.at(0)).size() );
 	}
 
-	cout << "Mutation " << mutation_point_1 << " Mutation " << mutation_point_2 << endl;
+	if (DEBUG == 1) cout << "Mutation " << mutation_point_1 << " Mutation " << mutation_point_2 << endl;
 
 	// GET CROSSING POINTS IN ORDER
 	int smaller = (mutation_point_1 < mutation_point_2)?(mutation_point_1):(mutation_point_2);
 	int bigger = (mutation_point_1 < mutation_point_2)?(mutation_point_2):(mutation_point_1);
 
-	cout << smaller << " < " << bigger << endl;
+	if (DEBUG == 1) cout << smaller << " < " << bigger << endl;
 
 	// COLLECTING SUBPATH FOR MUTATION
 	vector<string> daughter_mutation;
@@ -244,14 +253,14 @@ vector<vector<string>> mutation(vector<vector<string>> children, map<string, vec
 		daughter_mutation.push_back(daughter.at(i));
 		son_mutation.push_back(son.at(i));
 	}
-	cout << "Before reversal:" << endl;
-	print_path(daughter_mutation);
-	print_path(son_mutation);
+	if (DEBUG == 1) cout << "Before reversal:" << endl;
+	if (DEBUG == 1) print_path(daughter_mutation);
+	if (DEBUG == 1) print_path(son_mutation);
 	reverse(daughter_mutation.begin(), daughter_mutation.end());
 	reverse(son_mutation.begin(), son_mutation.end());
-	cout << "After reversal:" << endl;
-	print_path(daughter_mutation);
-	print_path(son_mutation);
+	if (DEBUG == 1) cout << "After reversal:" << endl;
+	if (DEBUG == 1) print_path(daughter_mutation);
+	if (DEBUG == 1) print_path(son_mutation);
 
 	// MUTATING
 	unsigned int index = 0;
@@ -261,9 +270,9 @@ vector<vector<string>> mutation(vector<vector<string>> children, map<string, vec
 		++index;
 	}
 
-	cout << "After mutation:" << endl;
-	print_path(daughter);
-	print_path(son);
+	if (DEBUG == 1) cout << "After mutation:" << endl;
+	if (DEBUG == 1) print_path(daughter);
+	if (DEBUG == 1) print_path(son);
 
 	mutated_children.push_back(daughter);
 	mutated_children.push_back(son);
@@ -300,7 +309,7 @@ vector<vector<string>> crossover(vector<vector<string>> parents, map<string, vec
 	if (DEBUG == 1) cout << "Mothers gene size: " << parents.at(0).size() << endl;
 	// FILLING CHILDREN WITH EMPTY GENES
 	for (unsigned int i = 0; i < (parents.at(0)).size(); ++i ){
-		cout << "Filling children " << i << endl; 
+		if (DEBUG == 1) cout << "Filling children " << i << endl; 
 		daughter.push_back(" ");
 		son.push_back(" ");
 	}
@@ -323,8 +332,8 @@ vector<vector<string>> crossover(vector<vector<string>> parents, map<string, vec
 		son[i] = (parents.at(0)).at(i);
 		father_data.push_back((parents.at(0)).at(i));
 	}
-	print_path(daughter);
-	print_path(son);
+	if (DEBUG == 1)print_path(daughter);
+	if (DEBUG == 1)print_path(son);
 
 	// CREATE RULES FROM PARENTS
 	vector<vector<string>> rules;
@@ -339,8 +348,8 @@ vector<vector<string>> crossover(vector<vector<string>> parents, map<string, vec
 		rules.push_back(rule_1);
 		rules.push_back(rule_2);
 	}
-	cout << "Rules:" << endl;
-	print_array_of_paths(rules);
+	if (DEBUG == 1) cout << "Rules:" << endl;
+	if (DEBUG == 1) print_array_of_paths(rules);
 
 	// FILLING CHILDREN EMPTY GENES 1
 	for (unsigned int i = 0; i < smaller; ++i){
@@ -354,12 +363,12 @@ vector<vector<string>> crossover(vector<vector<string>> parents, map<string, vec
 		}
 	}
 
-	cout << "After filling sub gene 1:" << endl;
-	print_path(parents.at(0));
-	print_path(daughter);
-	cout << endl;
-	print_path(parents.at(1));
-	print_path(son);
+	if (DEBUG == 1) cout << "After filling sub gene 1:" << endl;
+	if (DEBUG == 1) print_path(parents.at(0));
+	if (DEBUG == 1) print_path(daughter);
+	if (DEBUG == 1) cout << endl;
+	if (DEBUG == 1) print_path(parents.at(1));
+	if (DEBUG == 1) print_path(son);
 
 	// FILLING CHILDREN EMPTY GENES 1
 	for (unsigned int i = bigger; i < daughter.size(); ++i){
@@ -373,12 +382,12 @@ vector<vector<string>> crossover(vector<vector<string>> parents, map<string, vec
 		}
 	}
 
-	cout << "After filling sub gene 2:" << endl;
-	print_path(parents.at(0));
-	print_path(daughter);
-	cout << endl;
-	print_path(parents.at(1));
-	print_path(son);
+	if (DEBUG == 1) cout << "After filling sub gene 2:" << endl;
+	if (DEBUG == 1) print_path(parents.at(0));
+	if (DEBUG == 1) print_path(daughter);
+	if (DEBUG == 1) cout << endl;
+	if (DEBUG == 1) print_path(parents.at(1));
+	if (DEBUG == 1) print_path(son);
 
 	// COLLECTING UNUSED GENES FROM MOMMY
 	vector<string> unused_mommy_genes;
@@ -390,9 +399,9 @@ vector<vector<string>> crossover(vector<vector<string>> parents, map<string, vec
 		if (son.at(i) == " ") unused_daddy_genes.push_back( (parents.at(1)).at(i) ); 
 	}
 
-	cout << "Remaing genes:" << endl;
-	print_path(unused_mommy_genes);
-	print_path(unused_daddy_genes);
+	if (DEBUG == 1)cout << "Remaing genes:" << endl;
+	if (DEBUG == 1)print_path(unused_mommy_genes);
+	if (DEBUG == 1)print_path(unused_daddy_genes);
 
 	// FILLING REMAINING EMPTY GENES IN CHILDREN
 	unsigned int index = 0;
@@ -410,12 +419,12 @@ vector<vector<string>> crossover(vector<vector<string>> parents, map<string, vec
 		}
 	}
 
-	cout << "After full crossing:" << endl;
-	print_path(parents.at(0));
-	print_path(daughter);
-	cout << endl;
-	print_path(parents.at(1));
-	print_path(son);	
+	if (DEBUG == 1) cout << "After full crossing:" << endl;
+	if (DEBUG == 1) print_path(parents.at(0));
+	if (DEBUG == 1) print_path(daughter);
+	if (DEBUG == 1) cout << endl;
+	if (DEBUG == 1) print_path(parents.at(1));
+	if (DEBUG == 1) print_path(son);	
 	children.push_back(daughter);
 	children.push_back(son);
 	return children;
@@ -626,11 +635,11 @@ vector< vector<string> > create_initial_population(map<string, vector<int> > map
 			++check ;
 		}
 		if (check > 0) {
-			cout << "Cycle at " << i << endl;
-			print_path(population.at(i));
+			if (DEBUG == 1) cout << "Cycle at " << i << endl;
+			if (DEBUG == 1) print_path(population.at(i));
 		}
 		else {
-			cout << "No cycke at " << i << endl;
+			if (DEBUG == 1) cout << "No cycke at " << i << endl;
 		}
 	}
 	return population;
