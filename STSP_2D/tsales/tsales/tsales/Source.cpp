@@ -85,6 +85,7 @@ int main(){
 
 	solve(population_1, mapa, 100);
 
+	system("PAUSE");
 	return 0;
 	
 }
@@ -105,14 +106,14 @@ void solve(vector<vector<string>> population_1, map<string, vector<int> > mapa, 
 		clock_t begin_better_half = clock();
 		vector<vector<string>> better_half = pick_better_half(local_population, mapa, UINT_MAX);
 		clock_t end_better_half = clock();
-		cout << "Time spent on picking better half " << double(end_better_half - begin_better_half) / CLOCKS_PER_SEC << endl;
+		//cout << "Time spent on picking better half " << double(end_better_half - begin_better_half) / CLOCKS_PER_SEC << endl;
 
 		while (next_population.size() < population_1.size()){
 
 			clock_t begin_pt = clock();
 			vector<vector<string>> parents = pick_two(better_half);
 			clock_t end_pt = clock();
-			cout << "Time spent on picking parents " << double(end_pt - begin_pt) / CLOCKS_PER_SEC << endl;
+			//cout << "Time spent on picking parents " << double(end_pt - begin_pt) / CLOCKS_PER_SEC << endl;
 
 			if (DEBUG == 1) cout << "\nPARENTS:" << endl;
 			if (DEBUG == 1) print_array_of_paths(parents);
@@ -191,8 +192,8 @@ vector<vector<string>> mutation(vector<vector<string>> children, map<string, vec
 	if (DEBUG == 1) cout << "Mutation " << mutation_point_1 << " Mutation " << mutation_point_2 << endl;
 
 	// GET CROSSING POINTS IN ORDER
-	int smaller = (mutation_point_1 < mutation_point_2)?(mutation_point_1):(mutation_point_2);
-	int bigger = (mutation_point_1 < mutation_point_2)?(mutation_point_2):(mutation_point_1);
+	unsigned int smaller = (mutation_point_1 < mutation_point_2)?(mutation_point_1):(mutation_point_2);
+	unsigned int bigger = (mutation_point_1 < mutation_point_2)?(mutation_point_2):(mutation_point_1);
 
 	if (DEBUG == 1) cout << smaller << " < " << bigger << endl;
 
@@ -382,9 +383,6 @@ vector<vector<string>> crossover(vector<vector<string>> parents, map<string, vec
 
 vector<vector<string>> pick_two(vector<vector<string>> population)
 {
-	
-
-			
 	int counter = 0;		
 
 	vector<vector<string>> pair;
@@ -393,10 +391,10 @@ vector<vector<string>> pick_two(vector<vector<string>> population)
 		unsigned int random = get_random_num( population.size() );
 		clock_t end_pt = clock();
 		//cout << "PICK_TWO. Time spent on generating random number " << double(end_pt - begin_pt) / CLOCKS_PER_SEC << endl;
-		cout << random << endl;
+		//cout << random << endl;
 		vector<string> choosen = population.at(random);
 		if (pair.size() == 0){
-			cout << " Pushing fist one." << endl;
+			//cout << " Pushing fist one." << endl;
 			pair.push_back(choosen);
 		}
 		else {
@@ -415,7 +413,7 @@ vector<vector<string>> pick_two(vector<vector<string>> population)
 		}
 		++counter;
 	}
-	cout << "PICK_TWO. Tried to generate pair for " << counter << " times.";
+	//cout << "PICK_TWO. Tried to generate pair for " << counter << " times.";
 
 	return pair;
 }
@@ -568,19 +566,22 @@ bool compare_two(vector<string> v1, vector<string> v2){
 	return true; // THE SAME
 }
 
-vector< vector<string> > create_initial_population(map<string, vector<int> > mapa, 
-													unsigned int population_size)
-{
+vector< vector<string> > create_initial_population(map<string, vector<int> > mapa, unsigned int population_size){
 	// CREATES INITIAL POPULATION
 	vector<vector<string>> population;
 	vector<string> adam = get_nodes(mapa);
 
+	// FILL WHOLE POPULATION
 	while (population.size() < population_size){
+
+		// GENE REORDERING OF FIRST BEING
 		vector<string> being = shuffle(adam);
 		if (population.size() < 1){
 			population.push_back(being);
 		}
 		else {
+			// ADD ONLY THE ONES THAT WILL CONTAIN UNIQUE 
+			// ORDERS OF GENES IN POPULATION
 			unsigned int check = 0;
 			for (unsigned int i = 0; i < population.size(); ++i){
 				if (compare_two(being, population.at(i))){
@@ -592,18 +593,10 @@ vector< vector<string> > create_initial_population(map<string, vector<int> > map
 			}
 		}
 	}
-	print_array_of_paths(population);
+	// CHECK FOR CYCLES IN POPULATION
 	for (unsigned int i = 0; i < population.size(); ++i){
-		int check = 0;
 		if ( contains_cycles( population.at(i))){
-			++check ;
-		}
-		if (check > 0) {
-			if (DEBUG == 1) cout << "Cycle at " << i << endl;
-			if (DEBUG == 1) print_path(population.at(i));
-		}
-		else {
-			if (DEBUG == 1) cout << "No cycke at " << i << endl;
+			cout << "[ERR] F2: Cycle detected at " << i << endl;
 		}
 	}
 	return population;
