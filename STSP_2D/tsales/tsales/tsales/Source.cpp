@@ -60,16 +60,15 @@ using namespace std;
 	void solve(vector<vector<string>> population_1, map<string, vector<int> > mapa, int iterations);
 
 int main(){
+
 	// VARIABLES
 	unsigned int population_size = 30;
 	double mutation_threshold = 0.021;
 	unsigned int iteration_threshold = 100;
 	unsigned int worst_possible_path_lenght = UINT_MAX;
 
-	clock_t begin = clock();
-	clock_t end = clock();
-	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-	cout << "Time spent " << elapsed_secs << endl; 
+	srand(time(NULL));
+	
 
 	// BUILDING DATA MAP
 	map<string, vector<int> > mapa = build_data_map();
@@ -78,79 +77,16 @@ int main(){
 
 
 	// CREATING INITIAL POPULATION
+	clock_t begin = clock();
 	vector<vector<string>> population_1 = create_initial_population(mapa, population_size);
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	cout << "Time spent on creating initial population: " << elapsed_secs << endl; 
 
-	solve(population_1, mapa, 10);
+	solve(population_1, mapa, 100);
 
 	return 0;
-	// SHOW INITIAL POPULATION
-	print_array_of_paths_and_values(population_1, mapa);
-
-	// FIND BEST PATH
-	vector<string> best_path = find_best_path(population_1, mapa, worst_possible_path_lenght);
 	
-	  // BEGIN
-	 //
-	// GET BETTER HALF OF POPULATION
-	vector<vector<string>> better_half = pick_better_half(population_1, mapa, worst_possible_path_lenght);
-	cout << endl;
-	print_array_of_paths_and_values(better_half, mapa);
-
-		// CREATING NEXT POPULATION
-		vector<vector<string>> next_population;
-
-		// REPEAT FROM HERE
-
-			// PICKING TWO FROM BETTER HALF
-			vector<vector<string>> parents = pick_two(better_half);
-			if (DEBUG == 1) cout << "Parents:\n";
-			if (DEBUG == 1) print_array_of_paths_and_values(parents, mapa);
-
-			// CROSSOVER
-			vector<vector<string>> children = crossover(parents, mapa);
-
-			// MUTATION
-			children = mutation(children, mapa);
-			if (DEBUG == 1) print_array_of_paths_and_values(children, mapa);
-
-			// CHECK CHILDREN FOR CYCLES
-			bool cycles_in_daughter = contains_cycles(children.at(0));
-			bool cycles_in_son = contains_cycles(children.at(1));
-			bool check_identical = compare_two(children.at(0), children.at(1));
-
-			// CHECK IF CHILDREN DO NOT HAVE DUPLICATES IN NEXT POPULATION
-			// IF NOT - ADD THEM
-			if ( check_identical == false ){
-				if ( next_population.size() < 1 ){
-					if (!cycles_in_daughter) next_population.push_back(children.at(0));
-					if (!cycles_in_son) next_population.push_back(children.at(1));
-				}
-				else {
-					int daughter_check = 0;
-					int son_check = 0;
-					for (unsigned int i = 0;  i < next_population.size(); ++i){
-						if (children.at(0) == next_population.at(i)) ++daughter_check;
-						if (children.at(1) == next_population.at(i)) ++son_check;
-					}
-					if (daughter_check < 1) next_population.push_back(children.at(0));
-					if (son_check < 1) next_population.push_back(children.at(1));
-				}
-			}
-
-			cout << "Next population so far:" << endl;
-			print_array_of_paths_and_values(next_population, mapa);
-
-		// IF NEW BEST PATH IS BETTER THEN CURRENT RECORD HOLDER
-
-		// SET NEXT POPULATION AS CURRENT ONE 
-
-	// EPILOG
-
-	// TESTING
-
-
-	//system("PAUSE");
-	return 0;
 }
 
 
@@ -162,11 +98,22 @@ void solve(vector<vector<string>> population_1, map<string, vector<int> > mapa, 
 	unsigned int best_path_reached_in_iteration = 0;
 	unsigned int iteration_counter = 0;
 	vector<vector<string>> local_population = population_1;
+
 	while ( iterations > 0 ){
+		clock_t begin_iteration = clock();
 		vector<vector<string>> next_population;
+		clock_t begin_better_half = clock();
 		vector<vector<string>> better_half = pick_better_half(local_population, mapa, UINT_MAX);
+		clock_t end_better_half = clock();
+		cout << "Time spent on picking better half " << double(end_better_half - begin_better_half) / CLOCKS_PER_SEC << endl;
+
 		while (next_population.size() < population_1.size()){
+
+			clock_t begin_pt = clock();
 			vector<vector<string>> parents = pick_two(better_half);
+			clock_t end_pt = clock();
+			cout << "Time spent on picking parents " << double(end_pt - begin_pt) / CLOCKS_PER_SEC << endl;
+
 			if (DEBUG == 1) cout << "\nPARENTS:" << endl;
 			if (DEBUG == 1) print_array_of_paths(parents);
 
@@ -194,6 +141,9 @@ void solve(vector<vector<string>> population_1, map<string, vector<int> > mapa, 
 				}
 			} 
 		}
+		clock_t end_iteration = clock();
+		double iteration_elapsed_secs = double(end_iteration - begin_iteration) / CLOCKS_PER_SEC;
+		cout << "Time spent on iteration " << iteration_elapsed_secs << endl; 
 
 		// PICK BEST PATH
 		vector<string> local_best_path =  find_best_path(next_population, mapa, UINT_MAX);
@@ -432,33 +382,47 @@ vector<vector<string>> crossover(vector<vector<string>> parents, map<string, vec
 
 vector<vector<string>> pick_two(vector<vector<string>> population)
 {
+	
+
+			
+	int counter = 0;		
+
 	vector<vector<string>> pair;
 	while (pair.size() != 2){
+		clock_t begin_pt = clock();
 		unsigned int random = get_random_num( population.size() );
+		clock_t end_pt = clock();
+		//cout << "PICK_TWO. Time spent on generating random number " << double(end_pt - begin_pt) / CLOCKS_PER_SEC << endl;
+		cout << random << endl;
 		vector<string> choosen = population.at(random);
 		if (pair.size() == 0){
+			cout << " Pushing fist one." << endl;
 			pair.push_back(choosen);
 		}
 		else {
 			int different = 0;
 			vector<string> first = pair.at(0);
-			for (unsigned int i = 0; i < choosen.size(); ++i){
-				if (choosen.at(i) != first.at(i)){
-					++different;
-					break;
-				}
-			}
-			if (different != 0){
-				pair.push_back(choosen);
-			}
+			if ( first != choosen ) pair.push_back(choosen);
+			// for (unsigned int i = 0; i < choosen.size(); ++i){
+			// 	if (choosen.at(i) != first.at(i)){
+			// 		++different;
+			// 		break;
+			// 	}
+			// }
+			// if (different != 0){
+			// 	pair.push_back(choosen);
+			// }
 		}
+		++counter;
 	}
+	cout << "PICK_TWO. Tried to generate pair for " << counter << " times.";
+
 	return pair;
 }
 
 int get_random_num(int mod)
 {
-	srand(time(NULL));
+	
 	return rand() % mod ;
 }
 
