@@ -75,14 +75,14 @@ int main(){
 	map<string, vector<int> > mapa2 = build_bigger_data_map();
 	map<string, vector<int> > mapa3 = build_biggest_data_map();
 
-	population_size = mapa3.size();
+	population_size = mapa2.size();
 
 	// CREATING INITIAL POPULATION
-	vector<vector<string>> population_1 = create_initial_population(mapa3, population_size);
+	vector<vector<string>> population_1 = create_initial_population(mapa2, population_size);
 
 	// SOLVING
 	clock_t begin_pt = clock();
-	solve(population_1, mapa3, iteration_threshold);
+	solve(population_1, mapa2, iteration_threshold);
 	//clock_t end_pt = clock();
 	std::cout << "Time spent solving " << double(clock() - begin_pt) / CLOCKS_PER_SEC << endl;
 
