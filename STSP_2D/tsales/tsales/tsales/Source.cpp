@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ctime>
+#include <omp.h>
 
 // mini_map = {
 // 	"AA": {"x": 0, "y": 13},
@@ -67,7 +68,7 @@ int main(){
 	// VARIABLES
 	unsigned int population_size = 30;
 	double mutation_threshold = 0.021;
-	unsigned int iteration_threshold = 3000;
+	unsigned int iteration_threshold = 1000;
 	unsigned int worst_possible_path_lenght = UINT_MAX;
 
 	// SEEDING
@@ -78,7 +79,7 @@ int main(){
 	map<string, vector<int> > mapa2 = build_bigger_data_map();
 	map<string, vector<int> > mapa3 = build_biggest_data_map();
 
-	population_size = mapa2.size()*2;
+	population_size = mapa2.size();
 
 	// CREATING INITIAL POPULATION
 	vector<vector<string>> population_1 = create_initial_population(mapa3, population_size);
@@ -165,7 +166,7 @@ void solve(vector<vector<string>> population_1, map<string, vector<int> > mapa, 
 		double local_best_path_length = get_path_length(local_best_path, mapa);
 
 		// INFORM ABOUT CURRENT ITERATION
-		//cout << "[INFO] Iteration " << iteration_counter+1 << ". Best path length: " << local_best_path_length << endl;
+		cout << "[INFO] Iteration " << iteration_counter+1 << ". Best path length: " << local_best_path_length << endl;
 
 		// CHECK IF CURRENT ONE IS BEST
 		if (local_best_path_length < best_path_length) {
@@ -481,8 +482,9 @@ void print_array_of_paths_and_values(vector<vector<string>> path_array, map<stri
 	}
 }
 
-double get_path_length(vector<string> nodes, map<string, vector<int> > mapa){
+double old_get_path_length(vector<string> nodes, map<string, vector<int> > mapa){
 	// GETS LENGTH OF A GIVEN PATH
+	
 	double sum = 0;
 	for (unsigned int i = 0; i < nodes.size()-1; ++i){
 		double partial_sum = find_calculated_data(nodes.at(i), nodes.at(i+1));
@@ -493,6 +495,35 @@ double get_path_length(vector<string> nodes, map<string, vector<int> > mapa){
 			partial_sum = get_distance(nodes.at(i), nodes.at(i + 1), mapa);
 			add_to_calculated_data(nodes.at(i), nodes.at(i+1), partial_sum);
 			sum += partial_sum;
+		}
+	}
+	return sum;
+}
+
+double get_path_length(vector<string> nodes, map<string, vector<int> > mapa){
+	// GETS LENGTH OF A GIVEN PATH
+	
+	double sum = 0;
+	unsigned int tid, nthreads, i;
+	omp_set_num_threads(4);
+	#pragma omp parallel shared(sum, calculated_data, mapa) private(tid, i)
+	{
+		tid = omp_get_thread_num();
+		// if (tid == 0){
+		// 	nthreads = omp_get_num_threads();
+		// 	//cout << "Number of threads: " << nthreads << endl;
+		// }
+		#pragma omp for schedule(dynamic)
+		for (i = 0; i < nodes.size()-1; ++i){
+			double partial_sum = find_calculated_data(nodes.at(i), nodes.at(i+1));
+			if (partial_sum != -1){
+				sum += partial_sum;
+			}
+			else {
+				partial_sum = get_distance(nodes.at(i), nodes.at(i + 1), mapa);
+				add_to_calculated_data(nodes.at(i), nodes.at(i+1), partial_sum);
+				sum += partial_sum;
+			}
 		}
 	}
 	return sum;
