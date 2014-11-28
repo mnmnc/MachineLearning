@@ -45,6 +45,7 @@ using namespace std;
 // COLLECTION FUNCTIONS
 	map<string, vector<int>> build_data_map();
 	map<string, vector<int> > build_bigger_data_map();
+	map<string, vector<int> > build_biggest_data_map();
 	vector<string> get_nodes(map<string, vector<int> > mapa);
 	vector<vector<string>> create_initial_population(map<string, vector<int>> mapa, unsigned int population_size);
 	
@@ -72,15 +73,16 @@ int main(){
 	// BUILDING DATA MAP
 	map<string, vector<int> > mapa = build_data_map();
 	map<string, vector<int> > mapa2 = build_bigger_data_map();
+	map<string, vector<int> > mapa3 = build_biggest_data_map();
 
-	population_size = mapa2.size();
+	population_size = mapa3.size();
 
 	// CREATING INITIAL POPULATION
-	vector<vector<string>> population_1 = create_initial_population(mapa2, population_size);
+	vector<vector<string>> population_1 = create_initial_population(mapa3, population_size);
 
 	// SOLVING
 	clock_t begin_pt = clock();
-	solve(population_1, mapa2, iteration_threshold);
+	solve(population_1, mapa3, iteration_threshold);
 	//clock_t end_pt = clock();
 	std::cout << "Time spent solving " << double(clock() - begin_pt) / CLOCKS_PER_SEC << endl;
 
@@ -717,5 +719,800 @@ map<string, vector<int> > build_bigger_data_map(){
 	point.push_back(11);
 	mapa["Z"] = point;
 	point.clear();
+	return mapa;
+}
+
+map<string, vector<int> > build_biggest_data_map(){
+
+	vector<int> point;
+	map<string, vector<int> > mapa;
+
+
+
+	point.push_back(0);
+	point.push_back(13);
+	mapa["001"] = point;
+	point.clear();
+
+	point.push_back(0);
+	point.push_back(26);
+	mapa["002"] = point;
+	point.clear();
+
+	point.push_back(0);
+	point.push_back(27);
+	mapa["003"] = point;
+	point.clear();
+
+	point.push_back(0);
+	point.push_back(39);
+	mapa["004"] = point;
+	point.clear();
+
+	point.push_back(2);
+	point.push_back(0);
+	mapa["005"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(13);
+	mapa["006"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(19);
+	mapa["007"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(25);
+	mapa["008"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(31);
+	mapa["009"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(37);
+	mapa["010"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(43);
+	mapa["011"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(8);
+	mapa["012"] = point;
+	point.clear();
+
+	point.push_back(8);
+	point.push_back(0);
+	mapa["013"] = point;
+	point.clear();
+
+	point.push_back(9);
+	point.push_back(10);
+	mapa["014"] = point;
+	point.clear();
+
+	point.push_back(10);
+	point.push_back(10);
+	mapa["015"] = point;
+	point.clear();
+
+	point.push_back(11);
+	point.push_back(10);
+	mapa["016"] = point;
+	point.clear();
+
+	point.push_back(12);
+	point.push_back(10);
+	mapa["017"] = point;
+	point.clear();
+
+	point.push_back(12);
+	point.push_back(5);
+	mapa["018"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(13);
+	mapa["019"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(19);
+	mapa["020"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(25);
+	mapa["021"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(31);
+	mapa["022"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(37);
+	mapa["023"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(43);
+	mapa["024"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(8);
+	mapa["025"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(11);
+	mapa["026"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(13);
+	mapa["027"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(15);
+	mapa["028"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(17);
+	mapa["029"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(19);
+	mapa["030"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(21);
+	mapa["031"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(23);
+	mapa["032"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(25);
+	mapa["033"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(27);
+	mapa["034"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(29);
+	mapa["035"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(31);
+	mapa["036"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(33);
+	mapa["037"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(35);
+	mapa["038"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(37);
+	mapa["039"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(39);
+	mapa["040"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(41);
+	mapa["041"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(42);
+	mapa["042"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(44);
+	mapa["043"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(45);
+	mapa["044"] = point;
+	point.clear();
+
+	point.push_back(25);
+	point.push_back(11);
+	mapa["045"] = point;
+	point.clear();
+
+	point.push_back(25);
+	point.push_back(15);
+	mapa["046"] = point;
+	point.clear();
+
+	point.push_back(25);
+	point.push_back(22);
+	mapa["047"] = point;
+	point.clear();
+
+	point.push_back(25);
+	point.push_back(23);
+	mapa["048"] = point;
+	point.clear();
+
+	point.push_back(25);
+	point.push_back(24);
+	mapa["049"] = point;
+	point.clear();
+
+	point.push_back(25);
+	point.push_back(26);
+	mapa["050"] = point;
+	point.clear();
+
+	point.push_back(25);
+	point.push_back(28);
+	mapa["051"] = point;
+	point.clear();
+
+	point.push_back(25);
+	point.push_back(29);
+	mapa["052"] = point;
+	point.clear();
+
+	point.push_back(25);
+	point.push_back(9);
+	mapa["053"] = point;
+	point.clear();
+
+	point.push_back(28);
+	point.push_back(16);
+	mapa["054"] = point;
+	point.clear();
+
+	point.push_back(28);
+	point.push_back(20);
+	mapa["055"] = point;
+	point.clear();
+
+	point.push_back(28);
+	point.push_back(28);
+	mapa["056"] = point;
+	point.clear();
+
+	point.push_back(28);
+	point.push_back(30);
+	mapa["057"] = point;
+	point.clear();
+
+	point.push_back(28);
+	point.push_back(34);
+	mapa["058"] = point;
+	point.clear();
+
+	point.push_back(28);
+	point.push_back(40);
+	mapa["059"] = point;
+	point.clear();
+
+	point.push_back(28);
+	point.push_back(43);
+	mapa["061"] = point;
+	point.clear();
+
+	point.push_back(28);
+	point.push_back(47);
+	mapa["062"] = point;
+	point.clear();
+
+	point.push_back(32);
+	point.push_back(26);
+	mapa["063"] = point;
+	point.clear();
+
+	point.push_back(32);
+	point.push_back(31);
+	mapa["064"] = point;
+	point.clear();
+
+	point.push_back(33);
+	point.push_back(15);
+	mapa["065"] = point;
+	point.clear();
+
+	point.push_back(33);
+	point.push_back(26);
+	mapa["066"] = point;
+	point.clear();
+
+	point.push_back(33);
+	point.push_back(29);
+	mapa["067"] = point;
+	point.clear();
+
+	point.push_back(33);
+	point.push_back(31);
+	mapa["068"] = point;
+	point.clear();
+
+	point.push_back(34);
+	point.push_back(15);
+	mapa["069"] = point;
+	point.clear();
+
+	point.push_back(34);
+	point.push_back(26);
+	mapa["070"] = point;
+	point.clear();
+
+	point.push_back(34);
+	point.push_back(29);
+	mapa["071"] = point;
+	point.clear();
+
+	point.push_back(34);
+	point.push_back(31);
+	mapa["072"] = point;
+	point.clear();
+
+	point.push_back(34);
+	point.push_back(38);
+	mapa["073"] = point;
+	point.clear();
+
+	point.push_back(34);
+	point.push_back(41);
+	mapa["074"] = point;
+	point.clear();
+
+	point.push_back(34);
+	point.push_back(5);
+	mapa["075"] = point;
+	point.clear();
+
+	point.push_back(35);
+	point.push_back(17);
+	mapa["076"] = point;
+	point.clear();
+
+	point.push_back(35);
+	point.push_back(31);
+	mapa["077"] = point;
+	point.clear();
+
+	point.push_back(38);
+	point.push_back(16);
+	mapa["078"] = point;
+	point.clear();
+
+	point.push_back(38);
+	point.push_back(20);
+	mapa["079"] = point;
+	point.clear();
+
+	point.push_back(38);
+	point.push_back(30);
+	mapa["080"] = point;
+	point.clear();
+
+	point.push_back(38);
+	point.push_back(34);
+	mapa["081"] = point;
+	point.clear();
+
+	point.push_back(40);
+	point.push_back(22);
+	mapa["082"] = point;
+	point.clear();
+
+	point.push_back(41);
+	point.push_back(23);
+	mapa["083"] = point;
+	point.clear();
+
+	point.push_back(41);
+	point.push_back(32);
+	mapa["084"] = point;
+	point.clear();
+
+	point.push_back(41);
+	point.push_back(34);
+	mapa["085"] = point;
+	point.clear();
+
+	point.push_back(41);
+	point.push_back(35);
+	mapa["086"] = point;
+	point.clear();
+
+	point.push_back(41);
+	point.push_back(36);
+	mapa["087"] = point;
+	point.clear();
+
+	point.push_back(48);
+	point.push_back(22);
+	mapa["088"] = point;
+	point.clear();
+
+	point.push_back(48);
+	point.push_back(27);
+	mapa["089"] = point;
+	point.clear();
+
+	point.push_back(48);
+	point.push_back(6);
+	mapa["090"] = point;
+	point.clear();
+
+	point.push_back(51);
+	point.push_back(45);
+	mapa["091"] = point;
+	point.clear();
+
+	point.push_back(51);
+	point.push_back(47);
+	mapa["092"] = point;
+	point.clear();
+
+	point.push_back(56);
+	point.push_back(25);
+	mapa["093"] = point;
+	point.clear();
+
+	point.push_back(57);
+	point.push_back(12);
+	mapa["094"] = point;
+	point.clear();
+
+	point.push_back(57);
+	point.push_back(25);
+	mapa["095"] = point;
+	point.clear();
+
+	point.push_back(57);
+	point.push_back(44);
+	mapa["096"] = point;
+	point.clear();
+
+	point.push_back(61);
+	point.push_back(45);
+	mapa["097"] = point;
+	point.clear();
+
+	point.push_back(61);
+	point.push_back(47);
+	mapa["098"] = point;
+	point.clear();
+
+	point.push_back(63);
+	point.push_back(6);
+	mapa["099"] = point;
+	point.clear();
+
+	point.push_back(64);
+	point.push_back(22);
+	mapa["100"] = point;
+	point.clear();
+
+	point.push_back(71);
+	point.push_back(11);
+	mapa["101"] = point;
+	point.clear();
+
+	point.push_back(71);
+	point.push_back(13);
+	mapa["102"] = point;
+	point.clear();
+
+	point.push_back(71);
+	point.push_back(16);
+	mapa["103"] = point;
+	point.clear();
+
+	point.push_back(71);
+	point.push_back(45);
+	mapa["104"] = point;
+	point.clear();
+
+	point.push_back(71);
+	point.push_back(47);
+	mapa["105"] = point;
+	point.clear();
+
+	point.push_back(74);
+	point.push_back(12);
+	mapa["106"] = point;
+	point.clear();
+
+	point.push_back(74);
+	point.push_back(16);
+	mapa["107"] = point;
+	point.clear();
+
+	point.push_back(74);
+	point.push_back(20);
+	mapa["108"] = point;
+	point.clear();
+
+	point.push_back(74);
+	point.push_back(24);
+	mapa["109"] = point;
+	point.clear();
+
+	point.push_back(74);
+	point.push_back(29);
+	mapa["110"] = point;
+	point.clear();
+
+	point.push_back(74);
+	point.push_back(35);
+	mapa["111"] = point;
+	point.clear();
+
+	point.push_back(74);
+	point.push_back(39);
+	mapa["112"] = point;
+	point.clear();
+
+	point.push_back(74);
+	point.push_back(6);
+	mapa["113"] = point;
+	point.clear();
+
+	point.push_back(77);
+	point.push_back(21);
+	mapa["114"] = point;
+	point.clear();
+
+	point.push_back(78);
+	point.push_back(10);
+	mapa["115"] = point;
+	point.clear();
+
+	point.push_back(78);
+	point.push_back(32);
+	mapa["116"] = point;
+	point.clear();
+
+	point.push_back(78);
+	point.push_back(35);
+	mapa["117"] = point;
+	point.clear();
+
+	point.push_back(78);
+	point.push_back(39);
+	mapa["118"] = point;
+	point.clear();
+
+	point.push_back(79);
+	point.push_back(10);
+	mapa["119"] = point;
+	point.clear();
+
+	point.push_back(79);
+	point.push_back(33);
+	mapa["120"] = point;
+	point.clear();
+
+	point.push_back(79);
+	point.push_back(37);
+	mapa["121"] = point;
+	point.clear();
+
+	point.push_back(80);
+	point.push_back(10);
+	mapa["122"] = point;
+	point.clear();
+
+	point.push_back(80);
+	point.push_back(41);
+	mapa["123"] = point;
+	point.clear();
+
+	point.push_back(80);
+	point.push_back(5);
+	mapa["124"] = point;
+	point.clear();
+
+	point.push_back(81);
+	point.push_back(17);
+	mapa["125"] = point;
+	point.clear();
+
+	point.push_back(84);
+	point.push_back(20);
+	mapa["126"] = point;
+	point.clear();
+
+	point.push_back(84);
+	point.push_back(24);
+	mapa["127"] = point;
+	point.clear();
+
+	point.push_back(84);
+	point.push_back(29);
+	mapa["128"] = point;
+	point.clear();
+
+	point.push_back(84);
+	point.push_back(34);
+	mapa["129"] = point;
+	point.clear();
+
+	point.push_back(84);
+	point.push_back(38);
+	mapa["130"] = point;
+	point.clear();
+
+	point.push_back(84);
+	point.push_back(6);
+	mapa["131"] = point;
+	point.clear();
+
+	point.push_back(107);
+	point.push_back(27);
+	mapa["132"] = point;
+	point.clear();
+
+	point.push_back(0);
+	point.push_back(13);
+	mapa["133"] = point;
+	point.clear();
+
+	point.push_back(0);
+	point.push_back(26);
+	mapa["134"] = point;
+	point.clear();
+
+	point.push_back(0);
+	point.push_back(27);
+	mapa["135"] = point;
+	point.clear();
+
+	point.push_back(0);
+	point.push_back(39);
+	mapa["136"] = point;
+	point.clear();
+
+	point.push_back(2);
+	point.push_back(0);
+	mapa["137"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(13);
+	mapa["138"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(19);
+	mapa["139"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(25);
+	mapa["140"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(31);
+	mapa["141"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(37);
+	mapa["142"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(43);
+	mapa["143"] = point;
+	point.clear();
+
+	point.push_back(5);
+	point.push_back(8);
+	mapa["144"] = point;
+	point.clear();
+
+	point.push_back(8);
+	point.push_back(0);
+	mapa["145"] = point;
+	point.clear();
+
+	point.push_back(9);
+	point.push_back(10);
+	mapa["146"] = point;
+	point.clear();
+
+	point.push_back(10);
+	point.push_back(10);
+	mapa["147"] = point;
+	point.clear();
+
+	point.push_back(11);
+	point.push_back(10);
+	mapa["148"] = point;
+	point.clear();
+
+	point.push_back(12);
+	point.push_back(10);
+	mapa["149"] = point;
+	point.clear();
+
+	point.push_back(12);
+	point.push_back(5);
+	mapa["150"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(13);
+	mapa["151"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(19);
+	mapa["152"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(25);
+	mapa["153"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(31);
+	mapa["154"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(37);
+	mapa["155"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(43);
+	mapa["156"] = point;
+	point.clear();
+
+	point.push_back(15);
+	point.push_back(8);
+	mapa["157"] = point;
+	point.clear();
+
+	point.push_back(18);
+	point.push_back(11);
+	mapa["158"] = point;
+	point.clear();
+
 	return mapa;
 }
