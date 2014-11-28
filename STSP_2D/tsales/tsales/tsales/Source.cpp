@@ -11,8 +11,6 @@
 #include <time.h>
 #include <ctime>
 
-int DEBUG = 0;
-
 // mini_map = {
 // 	"AA": {"x": 0, "y": 13},
 // 	"AB": {"x": 0, "y": 26},
@@ -28,6 +26,9 @@ int DEBUG = 0;
 
 using namespace std;
 
+int DEBUG = 0;
+map<string, double> calculated_data;
+
 // PRINTING FUNCTIONS
 	void print_path(vector<string> path);
 	void print_path_and_values(vector<string> path, map<string, vector<int> > mapa);
@@ -38,6 +39,8 @@ using namespace std;
 	double get_distance(string s1, string s2, map<string, vector<int> > mapa);
 	double get_path_length(vector<string> nodes, map<string, vector<int> > mapa);
 	double get_path_length(vector<string> nodes, map<string, vector<int> > mapa);
+	double find_calculated_data(string id_1, string id_2);
+	void add_to_calculated_data(string id_1, string id_2, double value);
 
 // COMPARE FUNCTIONS
 	bool contains_cycles(vector<string> path);
@@ -64,7 +67,7 @@ int main(){
 	// VARIABLES
 	unsigned int population_size = 30;
 	double mutation_threshold = 0.021;
-	unsigned int iteration_threshold = 100;
+	unsigned int iteration_threshold = 3000;
 	unsigned int worst_possible_path_lenght = UINT_MAX;
 
 	// SEEDING
@@ -75,14 +78,14 @@ int main(){
 	map<string, vector<int> > mapa2 = build_bigger_data_map();
 	map<string, vector<int> > mapa3 = build_biggest_data_map();
 
-	population_size = mapa2.size();
+	population_size = mapa2.size()*2;
 
 	// CREATING INITIAL POPULATION
-	vector<vector<string>> population_1 = create_initial_population(mapa2, population_size);
+	vector<vector<string>> population_1 = create_initial_population(mapa3, population_size);
 
 	// SOLVING
 	clock_t begin_pt = clock();
-	solve(population_1, mapa2, iteration_threshold);
+	solve(population_1, mapa3, iteration_threshold);
 	//clock_t end_pt = clock();
 	std::cout << "Time spent solving " << double(clock() - begin_pt) / CLOCKS_PER_SEC << endl;
 
@@ -90,6 +93,8 @@ int main(){
 	return 0;
 	
 }
+
+
 
 void solve(vector<vector<string>> population_1, map<string, vector<int> > mapa, int iterations){
 
@@ -160,7 +165,7 @@ void solve(vector<vector<string>> population_1, map<string, vector<int> > mapa, 
 		double local_best_path_length = get_path_length(local_best_path, mapa);
 
 		// INFORM ABOUT CURRENT ITERATION
-		cout << "[INFO] Iteration " << iteration_counter+1 << ". Best path length: " << local_best_path_length << endl;
+		//cout << "[INFO] Iteration " << iteration_counter+1 << ". Best path length: " << local_best_path_length << endl;
 
 		// CHECK IF CURRENT ONE IS BEST
 		if (local_best_path_length < best_path_length) {
@@ -480,7 +485,15 @@ double get_path_length(vector<string> nodes, map<string, vector<int> > mapa){
 	// GETS LENGTH OF A GIVEN PATH
 	double sum = 0;
 	for (unsigned int i = 0; i < nodes.size()-1; ++i){
-		sum += get_distance(nodes.at(i), nodes.at(i + 1), mapa);
+		double partial_sum = find_calculated_data(nodes.at(i), nodes.at(i+1));
+		if (partial_sum != -1){
+			sum += partial_sum;
+		}
+		else {
+			partial_sum = get_distance(nodes.at(i), nodes.at(i + 1), mapa);
+			add_to_calculated_data(nodes.at(i), nodes.at(i+1), partial_sum);
+			sum += partial_sum;
+		}
 	}
 	return sum;
 }
@@ -525,6 +538,26 @@ vector< vector<string> > create_initial_population(map<string, vector<int> > map
 		}
 	}
 	return population;
+}
+
+void add_to_calculated_data(string id_1, string id_2, double value){
+	// ADDS ALREADY CALCULATED VALUES TO MAP
+	string id = id_1 + "-" + id_2;
+	string di = id_2 + "-" + id_1;
+	calculated_data[id] = value;
+	calculated_data[di] = value;
+}
+
+double find_calculated_data(string id_1, string id_2){
+	// CHECKS IF DISTANCE HAS ALREADY BEEN CALCULATED
+	string id = id_1 + "-" + id_2;
+	double result = calculated_data[id];
+	if (result != 0) {
+		return result;
+	}
+	else {
+		return -1;
+	}
 }
 
 map<string, vector<int> > build_data_map(){
