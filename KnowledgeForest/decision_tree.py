@@ -205,7 +205,7 @@ def build_tree(local_data, current_root, decision_attribute, decision_positive_v
 
 def main():
 	global debug, debug_prefix, debug_postfix
-	debug = 0
+	debug = 1
 	debug_prefix = "\t\t[DBG] " + Fore.BLUE
 	debug_postfix = Fore.RESET
 	build_tree(data, None, "PLAY", 1, 0, None)
