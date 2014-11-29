@@ -524,14 +524,14 @@ def main():
 	global map, mutation_threshold, worst_possible_path_length
 
 	mutation_threshold = 0.021
-	iteration_threshold = 1000
+	iteration_threshold = 100
 	worst_possible_path_length = 9999999999
 
 	# DATA SETS
 	maps = [mini_map, small_map, large_map]
 
 	# CHOSEN DATA SET
-	map = maps[1]
+	map = maps[2]
 
 	# INITIATE
 	population = create_initial_population(map)
