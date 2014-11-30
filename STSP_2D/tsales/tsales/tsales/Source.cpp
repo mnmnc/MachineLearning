@@ -31,6 +31,7 @@ int DEBUG = 0;
 map<string, double> calculated_data;
 
 // PRINTING FUNCTIONS
+	void print_map(map<string, vector<int> > mapa);
 	void print_path(vector<string> path);
 	void print_path_and_values(vector<string> path, map<string, vector<int> > mapa);
 	void print_array_of_paths(vector<vector<string>> path_array);
@@ -68,7 +69,7 @@ int main(){
 	// VARIABLES
 	unsigned int population_size = 30;
 	double mutation_threshold = 0.021;
-	unsigned int iteration_threshold = 1000;
+	unsigned int iteration_threshold = 100;
 	unsigned int worst_possible_path_lenght = UINT_MAX;
 
 	// SEEDING
@@ -78,6 +79,9 @@ int main(){
 	map<string, vector<int> > mapa = build_data_map();
 	map<string, vector<int> > mapa2 = build_bigger_data_map();
 	map<string, vector<int> > mapa3 = build_biggest_data_map();
+
+	//print_map(mapa3);
+	//return 0;
 
 	population_size = mapa2.size();
 
@@ -95,7 +99,15 @@ int main(){
 	
 }
 
-
+void print_map(map<string, vector<int> > mapa){
+	vector<string> v;
+	for(map<string,vector<int>>::iterator it = mapa.begin(); it != mapa.end(); ++it) {
+	  v.push_back(it->first);
+	}
+	for (unsigned int i = 0; i < v.size(); ++i){
+		cout << v.at(i) << ": [ x: " << mapa[v.at(i)][0] << ", y: " << mapa[v.at(i)][1] << " ]"<< endl;
+	}
+}
 
 void solve(vector<vector<string>> population_1, map<string, vector<int> > mapa, int iterations){
 
