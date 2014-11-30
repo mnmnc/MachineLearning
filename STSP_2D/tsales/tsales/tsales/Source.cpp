@@ -516,7 +516,7 @@ double get_path_length(vector<string> nodes, map<string, vector<int> > mapa){
 	// GETS LENGTH OF A GIVEN PATH
 	
 	double sum = 0;
-	unsigned int tid, nthreads, i;
+	int tid, nthreads, i;
 	omp_set_num_threads(4);
 	#pragma omp parallel shared(sum, calculated_data, mapa) private(tid, i)
 	{
